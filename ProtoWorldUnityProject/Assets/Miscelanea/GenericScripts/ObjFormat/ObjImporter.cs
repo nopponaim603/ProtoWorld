@@ -72,7 +72,7 @@ public class ObjImporter {
  
         mesh.RecalculateBounds();
         mesh.calculateMeshTangents();
-        mesh.Optimize();
+        ;
  
 		return mesh;
 	}

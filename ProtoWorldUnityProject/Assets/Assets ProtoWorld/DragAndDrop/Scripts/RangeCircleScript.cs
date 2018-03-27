@@ -40,7 +40,7 @@ public class RangeCircleScript : MonoBehaviour
     /// </summary>
 	void Start () 
     {
-        circleCanvas = GetComponentInChildren<Transform>().FindChild("CircleCanvas");
+        circleCanvas = GetComponentInChildren<Transform>().Find("CircleCanvas");
 		
         //make the circleBool true whenever a new bikestation is added
 		if(rayHitPositionClass.gameStartedBool == true)

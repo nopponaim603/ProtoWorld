@@ -55,9 +55,9 @@ public class FlashDestinationsUI : MonoBehaviour
 
                 // Get the needed components of the slider object
                 RectTransform canvasBox = destinationPrioritySlider.GetComponent<RectTransform>();
-                UnityEngine.UI.Text destinationText = destinationPrioritySlider.transform.FindChild("DestinationText").GetComponent<UnityEngine.UI.Text>();
-                UnityEngine.UI.Slider slider = destinationPrioritySlider.transform.FindChild("Slider").GetComponent<UnityEngine.UI.Slider>();
-                FlashDestinationSliderController sliderscript = destinationPrioritySlider.transform.FindChild("Slider").GetComponent<FlashDestinationSliderController>();
+                UnityEngine.UI.Text destinationText = destinationPrioritySlider.transform.Find("DestinationText").GetComponent<UnityEngine.UI.Text>();
+                UnityEngine.UI.Slider slider = destinationPrioritySlider.transform.Find("Slider").GetComponent<UnityEngine.UI.Slider>();
+                FlashDestinationSliderController sliderscript = destinationPrioritySlider.transform.Find("Slider").GetComponent<FlashDestinationSliderController>();
 
                 // Position the slider according to its parent object
                 destinationPrioritySlider.transform.SetParent(this.transform, false);

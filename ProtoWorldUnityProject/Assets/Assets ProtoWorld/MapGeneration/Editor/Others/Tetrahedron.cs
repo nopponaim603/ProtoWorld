@@ -100,7 +100,7 @@ uv0,uv1,uv2
 
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-        mesh.Optimize();
+        ;
     }
 
     // Use this for initialization

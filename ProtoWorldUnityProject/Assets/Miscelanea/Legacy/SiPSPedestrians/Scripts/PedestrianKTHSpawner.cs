@@ -155,8 +155,8 @@ public class PedestrianKTHSpawner : MonoBehaviour
             v3.z -= 290.0f;
 
             //Try to find the closest point in the navmesh
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(v3, out hit, 100.0f, 1 << NavMesh.GetNavMeshLayerFromName("footway")))
+            UnityEngine.AI.NavMeshHit hit;
+            if (UnityEngine.AI.NavMesh.SamplePosition(v3, out hit, 100.0f, 1 << UnityEngine.AI.NavMesh.GetNavMeshLayerFromName("footway")))
             {
                 SpawnPedestrian(hit.position);
             }
@@ -228,7 +228,7 @@ public class PedestrianKTHSpawner : MonoBehaviour
         else if (modeChoice < 0.1402)
         {
             pedKnowledge.mode = 3;
-            newAgent.transform.FindChild("bike").gameObject.SetActive(true);
+            newAgent.transform.Find("bike").gameObject.SetActive(true);
 			pedKnowledge.animationStateName = "Bicycle";
         }
 

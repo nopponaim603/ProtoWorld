@@ -123,8 +123,8 @@ public class FlashPedestriansGlobalParameters : MonoBehaviour
     /// </summary>
     void Start()
     {
-        NavMesh.avoidancePredictionTime = 0.1f;
-        NavMesh.pathfindingIterationsPerFrame = 1000;
+        UnityEngine.AI.NavMesh.avoidancePredictionTime = 0.1f;
+        UnityEngine.AI.NavMesh.pathfindingIterationsPerFrame = 1000;
     }
 
     /// <summary>

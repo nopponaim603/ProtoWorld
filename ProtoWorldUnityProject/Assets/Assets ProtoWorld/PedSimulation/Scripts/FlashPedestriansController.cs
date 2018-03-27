@@ -41,7 +41,7 @@ public class FlashPedestriansController : TravelerController
     public float radiousToCheckStations = 1000;
 
     [HideInInspector]
-    public NavMeshAgent navAgent;
+    public UnityEngine.AI.NavMeshAgent navAgent;
 
     [HideInInspector]
     public FlashPedestriansInformer flashInformer;
@@ -89,7 +89,7 @@ public class FlashPedestriansController : TravelerController
     void Awake()
     {
         globalParam = FindObjectOfType<FlashPedestriansGlobalParameters>();
-        navAgent = gameObject.GetComponent<NavMeshAgent>();
+        navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
         FSM = gameObject.GetComponent<Animator>();
         balloons = transform.Find("Balloons");
     }
@@ -108,7 +108,7 @@ public class FlashPedestriansController : TravelerController
                 stations = routing.itinerary.WayPoints;
 
         // Calculate the road mask (used if car awareness is active)
-        roadMask = 1 << NavMesh.GetAreaFromName("vehicle road") | 1 << NavMesh.GetAreaFromName("residential") | 1 << NavMesh.GetAreaFromName("service") | 1 << NavMesh.GetAreaFromName("crosswalk");
+        roadMask = 1 << UnityEngine.AI.NavMesh.GetAreaFromName("vehicle road") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("residential") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("service") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("crosswalk");
 
         UpdateInfoBalloon();
 
@@ -192,7 +192,7 @@ public class FlashPedestriansController : TravelerController
             {
                 if (carAwarenessTimer > carAwarenessFrequency)
                 {
-                    NavMeshHit navHit;
+                    UnityEngine.AI.NavMeshHit navHit;
                     if (navAgent.enabled && navAgent.hasPath && !navAgent.SamplePathPosition(-1, 2.0f, out navHit))
                     {
                         if ((navHit.mask & roadMask) != 0)
@@ -262,7 +262,7 @@ public class FlashPedestriansController : TravelerController
         profile.speed += 3;
         navAgent.speed = profile.speed;
 
-        Transform bike = this.transform.FindChild("bike");
+        Transform bike = this.transform.Find("bike");
         if (bike != null)
             bike.gameObject.SetActive(true);
 
@@ -488,7 +488,7 @@ public class FlashPedestriansController : TravelerController
         this.gameObject.GetComponentInParent<FlashPedestriansSpawner>().numberOfPedestriansOnDestination++;
         flashInformer.UnsuscribePedestrian(this);
 
-        Transform bike = this.transform.FindChild("bike");
+        Transform bike = this.transform.Find("bike");
         if (bike != null)
             bike.gameObject.SetActive(false);
 

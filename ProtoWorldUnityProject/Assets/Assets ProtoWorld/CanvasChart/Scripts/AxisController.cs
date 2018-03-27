@@ -53,12 +53,12 @@ public class AxisController : MonoBehaviour
         controller = GetComponentInParent<ChartController>();
         axisHolder = GetComponent<RectTransform>();
         canvasRenderer = GetComponent<CanvasRenderer>();
-        yMaxText = axisHolder.FindChild("YMaxText").GetComponent<Text>();
-        yMinText = axisHolder.FindChild("YMinText").GetComponent<Text>();
-        xMaxText = axisHolder.FindChild("XMaxText").GetComponent<Text>();
-        xMinText = axisHolder.FindChild("XMinText").GetComponent<Text>();
+        yMaxText = axisHolder.Find("YMaxText").GetComponent<Text>();
+        yMinText = axisHolder.Find("YMinText").GetComponent<Text>();
+        xMaxText = axisHolder.Find("XMaxText").GetComponent<Text>();
+        xMinText = axisHolder.Find("XMinText").GetComponent<Text>();
 
-        yZero = axisHolder.FindChild("YZeroText").gameObject;
+        yZero = axisHolder.Find("YZeroText").gameObject;
 
     }
 

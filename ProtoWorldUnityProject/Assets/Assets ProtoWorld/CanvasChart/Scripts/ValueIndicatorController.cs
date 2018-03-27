@@ -52,8 +52,8 @@ public class ValueIndicatorController : MonoBehaviour
     {
         chartController = GetComponentInParent<ChartController>();
         valueIndicator = GetComponent<Slider>();
-        valueHandleArea = transform.FindChild("Handle Slide Area").gameObject;
-        valueButtonText = transform.FindChild("Handle Slide Area/Handle/ValueTimeButton/Text").GetComponent<Text>();
+        valueHandleArea = transform.Find("Handle Slide Area").gameObject;
+        valueButtonText = transform.Find("Handle Slide Area/Handle/ValueTimeButton/Text").GetComponent<Text>();
         SetActive(false);
     }
 

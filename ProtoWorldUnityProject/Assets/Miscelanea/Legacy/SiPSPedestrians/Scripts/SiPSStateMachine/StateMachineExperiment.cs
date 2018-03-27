@@ -42,13 +42,13 @@ namespace GaPSLabsUnity.StateMachine
 
         [HideInInspector]
         public int mode;
-        public NavMeshAgent navAgent;
+        public UnityEngine.AI.NavMeshAgent navAgent;
 
         public override void Init()
         {
             mode = Random.Range(0, 3);
 
-            navAgent = gameObject.GetComponent<NavMeshAgent>();
+            navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
             navAgent.SetDestination(transform.Find("Destiny").GetComponent<Transform>().position);
 
             onStateEnterEvent += onStateEnter;

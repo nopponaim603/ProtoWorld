@@ -115,8 +115,8 @@ public class StationInteraction : MonoBehaviour
         stationUICtrl.CloseConfirmationWindow(true); //In case it was open
         stationUICtrl.UpdateStationStateLabels(stationController.outOfService); //Only for Station UI v2.0
         //stationUI.transform.FindChild("CloseStationToggle").GetComponent<UnityEngine.UI.Toggle>().isOn = stationController.outOfService; //Only for Station UI v1.0
-        stationUI.transform.FindChild("Title").GetComponent<UnityEngine.UI.Text>().text = stationController.stationName;
-        stationUI.transform.FindChild("QueuingValue").GetComponent<UnityEngine.UI.Text>().text = stationController.queuing.ToString();
+        stationUI.transform.Find("Title").GetComponent<UnityEngine.UI.Text>().text = stationController.stationName;
+        stationUI.transform.Find("QueuingValue").GetComponent<UnityEngine.UI.Text>().text = stationController.queuing.ToString();
 
         // Fade in the station UI
         stationUICtrl.ShowStationUIWindow();

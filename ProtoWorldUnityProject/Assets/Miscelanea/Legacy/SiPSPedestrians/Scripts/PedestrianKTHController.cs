@@ -66,7 +66,7 @@ public class PedestrianKTHController : StateMachineBase
 
         pedestrianCache = gameObject.transform.parent.GetComponent<PedestrianKTHSpawner>().pedestrianCache;
 
-        floatingBalloon = transform.FindChild("ThinkingBalloon");
+        floatingBalloon = transform.Find("ThinkingBalloon");
 
         onStateEnterEvent += onStateEnter;
         onStateExitEvent += onStateExit;
@@ -141,7 +141,7 @@ public class PedestrianKTHController : StateMachineBase
                     steering.isVisible = false;
 
                     gameObject.GetComponent<BoxCollider>().enabled = false;
-                    gameObject.GetComponent<NavMeshAgent>().enabled = false;
+                    gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
                     break;
                 }
 
@@ -185,7 +185,7 @@ public class PedestrianKTHController : StateMachineBase
                     if (tellMeWhatYouAreDoing)
                         Debug.Log("I will stay at the library until: " + knowledge.timeToGoToMode);
 
-                    gameObject.GetComponent<NavMeshAgent>().enabled = true;
+                    gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 
                     //Set the new destination in path finding
                     steering.SetNewDestination(stateName);
@@ -198,7 +198,7 @@ public class PedestrianKTHController : StateMachineBase
                     //Check if there is a mode available soon
                     animator.SetBool("modeAvailableSoon", IsModeAvailableSoon());
 
-                    gameObject.GetComponent<NavMeshAgent>().enabled = true;
+                    gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 
                     //Set the new destination in path finding
                     steering.SetNewDestination(stateName);
@@ -207,7 +207,7 @@ public class PedestrianKTHController : StateMachineBase
 
             default:
                 {
-                    gameObject.GetComponent<NavMeshAgent>().enabled = true;
+                    gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 
                     //Set the new destination in path finding
                     steering.SetNewDestination(stateName);
@@ -259,7 +259,7 @@ public class PedestrianKTHController : StateMachineBase
                             }
                             else
                             {
-                                this.transform.FindChild("bike").gameObject.SetActive(false);
+                                this.transform.Find("bike").gameObject.SetActive(false);
 
                                 //Stay at the station, put in pedestrian cache for reuse
                                 pedestrianCache.Enqueue(this.gameObject);
@@ -284,7 +284,7 @@ public class PedestrianKTHController : StateMachineBase
             case "ToBikeStation": // added by furkan
             case "Bicycle":
                 {
-                    this.transform.FindChild("bike").gameObject.SetActive(false);
+                    this.transform.Find("bike").gameObject.SetActive(false);
 
                     //Stay there, put in pedestrian cache for reuse
                     pedestrianCache.Enqueue(this.gameObject);
@@ -420,50 +420,50 @@ public class PedestrianKTHController : StateMachineBase
         {
             case "Classroom":
                 {
-                    floatingBalloon = transform.FindChild("ClassroomBalloon");
+                    floatingBalloon = transform.Find("ClassroomBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
             case "ModeChoice":
                 {
-                    floatingBalloon = transform.FindChild("ThinkingBalloon");
+                    floatingBalloon = transform.Find("ThinkingBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
             case "Library":
                 {
-                    floatingBalloon = transform.FindChild("LibraryBalloon");
+                    floatingBalloon = transform.Find("LibraryBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
             case "Bus":
                 {
-                    floatingBalloon = transform.FindChild("BusBalloon");
+                    floatingBalloon = transform.Find("BusBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
             case "Metro":
                 {
-                    floatingBalloon = transform.FindChild("MetroBalloon");
+                    floatingBalloon = transform.Find("MetroBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
             case "Walk":
                 {
-                    floatingBalloon = transform.FindChild("WalkBalloon");
+                    floatingBalloon = transform.Find("WalkBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
             //Added by Furkan
             case "ToBikeStation":
                 {
-                    floatingBalloon = transform.FindChild("WalkBalloon");
+                    floatingBalloon = transform.Find("WalkBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
             case "Bicycle":
                 {
-                    floatingBalloon = transform.FindChild("BicycleBalloon");
+                    floatingBalloon = transform.Find("BicycleBalloon");
                     floatingBalloon.gameObject.SetActive(floatingBalloonsEnabled);
                     break;
                 }
@@ -506,6 +506,6 @@ public class PedestrianKTHController : StateMachineBase
         animator.SetBool("generalTrigger", true);
         knowledge.Reset();
         animator.Play("Classroom");
-        this.transform.FindChild("bike").gameObject.SetActive(false);
+        this.transform.Find("bike").gameObject.SetActive(false);
     }
 }
