@@ -12,13 +12,13 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-/*
-* 
-* FLASH PEDESTRIAN SIMULATOR
-* FlashPedestriansCounter.cs
-* Miguel Ramos Carretero
-* 
-*/
+﻿/*
+ * 
+ * FLASH PEDESTRIAN SIMULATOR
+ * FlashPedestriansCounter.cs
+ * Miguel Ramos Carretero
+ * 
+ */
 
 using UnityEngine;
 using System.Collections;
@@ -35,17 +35,11 @@ public class FlashPedestriansCounter : MonoBehaviour
     [Range(0, 10)]
     public float refreshFrequencyInSeconds = 1.0f;
 
-    public enum FlashPedestriansCounterType { OnScenario, OnDestination, Rerouting, Queuing, Subscribed }
-
-    public FlashPedestriansCounterType typeOfCounter = FlashPedestriansCounterType.OnScenario;
-
     private float nextUpdate = 0.0f;
     public int counter;
     private UnityEngine.UI.Text text;
 
     FlashPedestriansGlobalParameters globalParam;
-    FlashPedestriansInformer pedInformer;
-    StationStatistics stationStats;
 
     LoggerAssembly logger;
 
@@ -53,8 +47,6 @@ public class FlashPedestriansCounter : MonoBehaviour
     {
         logSeriesId = LoggerAssembly.GetLogSeriesId();
         globalParam = FindObjectOfType<FlashPedestriansGlobalParameters>();
-        pedInformer = FindObjectOfType<FlashPedestriansInformer>();
-        stationStats = FindObjectOfType<StationStatistics>();
         spawners = FindObjectsOfType<FlashPedestriansSpawner>();
     }
 
@@ -83,26 +75,21 @@ public class FlashPedestriansCounter : MonoBehaviour
 
             counter = 0;
 
-            if (typeOfCounter == FlashPedestriansCounterType.OnScenario)
+            foreach (FlashPedestriansSpawner S in spawners)
             {
-                counter = globalParam.numberOfPedestriansOnScenario;
-
-                if (logger != null && logger.logPedestrians)
-                {
-                    //LOG PEDESTRIAN COUNT
-                    log.Info(string.Format("{0}:{1}:{2}:{3}", logSeriesId, "int", 0, counter));
-                }
+                counter += S.numberOfPedestriansGenerated - S.numberOfPedestriansOnDestination;
             }
-            else if (typeOfCounter == FlashPedestriansCounterType.OnDestination)
-                counter = globalParam.numberOfPedestrianReachingDestination;
-            else if (typeOfCounter == FlashPedestriansCounterType.Rerouting)
-                counter = pedInformer.accumRouteChanges;
-            else if (typeOfCounter == FlashPedestriansCounterType.Queuing)
-                counter = stationStats.totalQueuing * globalParam.numberOfPedestriansPerAgent;
-            else if (typeOfCounter == FlashPedestriansCounterType.Subscribed)
-                counter = pedInformer.accumSubscribers;
+
+            // Scale the number of pedestrians
+            counter *= globalParam.numberOfPedestriansPerAgent;
 
             text.text = counter.ToString();
+
+            if (logger != null && logger.logPedestrians)
+            {
+                //LOG PEDESTRIAN COUNT
+                log.Info(string.Format("{0}:{1}:{2}:{3}", logSeriesId, "int", 0, counter));
+            }
         }
     }
 }

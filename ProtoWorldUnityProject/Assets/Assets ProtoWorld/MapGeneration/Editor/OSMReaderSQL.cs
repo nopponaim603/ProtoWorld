@@ -34,6 +34,7 @@ using Aram.OSMParser;
 using GapslabWCFservice;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class OSMReaderSQL : Editor
 {
@@ -712,8 +713,10 @@ public class OSMReaderSQL : Editor
 
     private static void BakeNavigation()
     {
-        NavMeshBuilder.ClearAllNavMeshes();
-        NavMeshBuilder.BuildNavMeshAsync();
+        //print("Skip Bake Navigation.");
+        //NavMeshBuilder.Cancel();
+        //NavMeshBuilder.BuildNavMeshData();
+       
     }
 
     public override void OnInspectorGUI()

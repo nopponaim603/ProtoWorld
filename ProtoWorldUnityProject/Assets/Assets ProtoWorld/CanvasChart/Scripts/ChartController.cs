@@ -181,15 +181,8 @@ public class ChartController : MonoBehaviour
     /// </summary>
     public float randomSeedLower = -20;
 
-    /// <summary>
-    /// Time controller of the game.
-    /// </summary>
-    private TimeController timeCtrl;
-
     void Awake()
     {
-        timeCtrl = FindObjectOfType<TimeController>();
-
         this.chartId = chartCounter++;
         //DataContainer = new TimedDataSeriesContainer();
     }
@@ -200,7 +193,7 @@ public class ChartController : MonoBehaviour
     /// </summary>
     void Start()
     {
-        timer = timeCtrl.gameTime;
+        timer = Time.time;
 
         //eventIndicatorView = transform.Find("ChartView/ChartHolder/EventIndicator").GetComponent<EventIndicatorController>();
         //valueIndicatorView = transform.Find("ChartView/ChartHolder/ValueIndicator").GetComponent<ValueIndicatorController>();
@@ -218,40 +211,37 @@ public class ChartController : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (!timeCtrl.IsPaused())
-        {
-            UpdateArraysLength(SeriesCount);
-            UpdateMaterials();
-            UpdateSeriesNameFromDataContainer();
+        UpdateArraysLength(SeriesCount);
+        UpdateMaterials();
+        UpdateSeriesNameFromDataContainer();
 
-            if (streaming)
+        if (streaming)
+        {
+            UpdateNumberOfSamples();
+            if (testing)
             {
-                UpdateNumberOfSamples();
-                if (testing)
+                if (Time.time - timer > updateRate)
                 {
-                    if (timeCtrl.gameTime - timer > updateRate)
-                    {
-                        GenerateStreamData();
-                        timer = timeCtrl.gameTime;
-                    }
-                }
-                for (int i = 0; i < values.Length; i++)
-                {
-                    var data = DataContainer.GetLastTimedData(i);
-                    if (data != null)
-                        values[i] = data.GetData();
+                    GenerateStreamData();
+                    timer = Time.time;
                 }
             }
-            else
+            for (int i = 0; i < values.Length; i++)
             {
-                if (testing)
-                {
-                    UseTestData();
-                    testing = false;
-                }
-                UpdateTimeInEventIndicator();
-                UpdateTimeInValueIndicator();
+                var data = DataContainer.GetLastTimedData(i);
+                if (data != null)
+                    values[i] = data.GetData();
             }
+        }
+        else
+        {
+            if (testing)
+            {
+                UseTestData();
+                testing = false;
+            }
+            UpdateTimeInEventIndicator();
+            UpdateTimeInValueIndicator();
         }
     }
 
@@ -272,7 +262,7 @@ public class ChartController : MonoBehaviour
                 }
                 else
                 {
-                    newTimes[i] = timeCtrl.gameTime;
+                    newTimes[i] = Time.time;
                 }
             }
             updateTimers = newTimes;
@@ -382,7 +372,7 @@ public class ChartController : MonoBehaviour
         {
             float rng = UnityEngine.Random.Range(randomSeedLower, randomSeedUpper);
             //Debug.Log("rng:" + rng);
-            DataContainer.Add(i, timeCtrl.gameTime, rng);
+            DataContainer.Add(i, Time.time, rng);
         }
     }
 
@@ -413,7 +403,7 @@ public class ChartController : MonoBehaviour
 
     public void AddTimedData(int seriesIndex, float value)
     {
-        AddTimedData(seriesIndex, timeCtrl.gameTime, value);
+        AddTimedData(seriesIndex, Time.time, value);
     }
 
     /// <summary>
@@ -427,13 +417,13 @@ public class ChartController : MonoBehaviour
         if (streaming)
         {
             //Debug.Log(seriesIndex);
-            if (timeCtrl.gameTime - updateTimers[seriesIndex] < updateRate)
+            if (Time.time - updateTimers[seriesIndex] < updateRate)
             {
                 return;
             }
             else
             {
-                updateTimers[seriesIndex] = timeCtrl.gameTime;
+                updateTimers[seriesIndex] = Time.time;
             }
         }
 

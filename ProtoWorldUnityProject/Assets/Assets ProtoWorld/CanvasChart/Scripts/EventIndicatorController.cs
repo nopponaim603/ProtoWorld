@@ -34,8 +34,8 @@ public class EventIndicatorController : MonoBehaviour {
     void Start () {
         controller = GetComponentInParent<ChartController>();
         eventIndicator = GetComponent<Slider>();
-        eventHandleArea = transform.FindChild("Handle Slide Area").gameObject;
-        eventButtonText = transform.FindChild("Handle Slide Area/Handle/EventButton/Text").GetComponent<Text>();
+        eventHandleArea = transform.Find("Handle Slide Area").gameObject;
+        eventButtonText = transform.Find("Handle Slide Area/Handle/EventButton/Text").GetComponent<Text>();
         SetActive(false);
     }
 	

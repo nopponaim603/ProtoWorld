@@ -29,11 +29,11 @@ using System.Collections;
 /// </summary>
 /// <remarks>The steering behaviour is based on a navigation mesh.</remarks>
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 public class PedestrianKTHSteering : MonoBehaviour
 {
     [HideInInspector]
-    public NavMeshAgent navAgent;
+    public UnityEngine.AI.NavMeshAgent navAgent;
 
     [HideInInspector]
     public bool tellMeWhatYouAreDoing = false;
@@ -71,7 +71,7 @@ public class PedestrianKTHSteering : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        navAgent = gameObject.GetComponent<NavMeshAgent>();
+        navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
         navAgent.speed = 1.5f; // +Random.Range(0.0f, speedVariation * 4.0f);
         aiController = gameObject.GetComponent<AIControllerWithLOD>();
     }
@@ -109,7 +109,7 @@ public class PedestrianKTHSteering : MonoBehaviour
                 isVisible = false;
                 Hide();
 
-                gameObject.GetComponent<NavMeshAgent>().enabled = false;
+                gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
                 gameObject.GetComponent<BoxCollider>().enabled = false;
                 gameObject.GetComponent<PedestrianKTHController>().floatingBalloon.gameObject.SetActive(false);
             }
@@ -144,7 +144,7 @@ public class PedestrianKTHSteering : MonoBehaviour
     {
         try
         {
-            gameObject.GetComponent<NavMeshAgent>().enabled = true;
+            gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 
             switch (destination)
             {

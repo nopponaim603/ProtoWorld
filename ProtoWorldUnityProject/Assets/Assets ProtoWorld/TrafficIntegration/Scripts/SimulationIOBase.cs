@@ -48,8 +48,6 @@ public abstract class SimulationIOBase
 
     protected float startTimeStep, progress, totalSteps;
 
-    protected int currentReadingStep, readingChunkForMatsim = 500;
-
     /// <summary>
     /// Show status of reading simulation, only called from menu item.
     /// </summary>
@@ -85,7 +83,7 @@ public abstract class SimulationIOBase
     /// If param is int, the IO expects a port number.
     /// </summary>
     /// <param name="param"></param>
-    public void Read(object param)
+    public void Read(System.Object param)
     {
         if (!Initialized())
             return;
@@ -116,6 +114,7 @@ public abstract class SimulationIOBase
             shouldStop = false;
             Read((string)param);
         }
+
         if (param is int)
         {
             shouldStop = false;
@@ -134,24 +133,6 @@ public abstract class SimulationIOBase
             timeController.RequestResumeGame();
             timeController.ShowLoadingIcon(false);
             timeController.ActivateTimeSlider(trafficDB.getNumberOfTimeSteps());
-        }
-
-        //Keeps reading concurrently for MatSim integration
-        if (trafficController != null &&
-            trafficController.typeOfIntegration == TrafficIntegrationController.TypeOfIntegration.MatsimDatabase &&
-            timeController != null)
-        {
-            int completedIterations = 1;
-
-            Debug.Log(trafficDB.getNumberOfTimeSteps() + ", " + readingChunkForMatsim * completedIterations);
-
-            while(trafficDB.getNumberOfTimeSteps() == readingChunkForMatsim * completedIterations)
-            {
-                shouldStop = false;
-                Read((string)param);
-                timeController.ActivateTimeSlider(trafficDB.getNumberOfTimeSteps());
-                completedIterations++;
-            }
         }
     }
 
@@ -243,8 +224,6 @@ public abstract class SimulationIOBase
         if (timeSteps.Add(time))
         {
             trafficDB.InsertNewTimeStep(time);
-                            currentReadingStep++;
-
         }
         //Debug.Log(trafficDB.getNumberOfTimeSteps());
     }

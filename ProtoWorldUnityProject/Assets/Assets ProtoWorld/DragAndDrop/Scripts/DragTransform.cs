@@ -118,7 +118,7 @@ class DragTransform : MonoBehaviour
 
         //the rotationCanvas gets assigned at the awake function. The child of the transform will be assigned
         //Ofcourse the rotationcanvas must be the child of the object
-        rotationCanvas = GetComponentInChildren<Transform>().FindChild("RotateToCamera");
+        rotationCanvas = GetComponentInChildren<Transform>().Find("RotateToCamera");
 
         //The startcolor of the object is being assigned to the private Color startcolor
         if (this.GetComponent<Renderer>().material.color != null)

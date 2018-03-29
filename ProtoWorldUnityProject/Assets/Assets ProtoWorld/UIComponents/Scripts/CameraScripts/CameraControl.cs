@@ -86,7 +86,6 @@ public class CameraControl : MonoBehaviour
     private float timeToUnblock = 0;
 
     private Vector3 keyBoardControlToMove = Vector3.zero;
-    private int numberOfBlockingRequests = 0;
 
     /// <summary>
     /// Initializes the camera control logic
@@ -217,22 +216,10 @@ public class CameraControl : MonoBehaviour
         {
             if (this.GetComponent<Camera>().orthographic == false)
             {
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
-					if(Mathf.Abs(transform.rotation.eulerAngles.x) > 45.0f) {
-						keyBoardControlToMove += transform.up * 100;
-					}
-					else {
-						keyBoardControlToMove += transform.forward * 100;
-					}
-				}
-                else {
-					if(Mathf.Abs(transform.rotation.eulerAngles.x) > 45.0f) {
-						keyBoardControlToMove += transform.up * 10;
-					}
-					else {
-						keyBoardControlToMove += transform.forward * 10;
-					}
-				}
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                    keyBoardControlToMove += transform.forward * 100;
+                else
+                    keyBoardControlToMove += transform.forward * 10;
             }
             else
             {
@@ -244,22 +231,11 @@ public class CameraControl : MonoBehaviour
         {
             if (this.GetComponent<Camera>().orthographic == false)
             {
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
-					if(Mathf.Abs(transform.rotation.eulerAngles.x) > 45.0f) {
-						keyBoardControlToMove -= transform.up * 100;
-					}
-					else {
-						keyBoardControlToMove -= transform.forward * 10;
-					}
-				}
-                else {
-					if(Mathf.Abs(transform.rotation.eulerAngles.x) > 45.0f) {
-						keyBoardControlToMove -= transform.up * 10;
-					}
-					else {
-						keyBoardControlToMove -= transform.forward * 10;
-					}
-				}
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                    keyBoardControlToMove -= transform.forward * 100;
+                else
+                    keyBoardControlToMove -= transform.forward * 10;
+
             }
             else
             {
@@ -347,10 +323,7 @@ public class CameraControl : MonoBehaviour
         {
             timeToUnblock -= Time.deltaTime;
             if (timeToUnblock <= 0)
-            {
-                numberOfBlockingRequests = 0;
                 blockControls = false;
-            }
         }
 
         #endregion Others
@@ -441,8 +414,6 @@ public class CameraControl : MonoBehaviour
     /// <param name="indefinite">If true, the block will be indefinite.</param>
     public void BlockPlayerControls(float seconds, bool indefinite = false)
     {
-        numberOfBlockingRequests++;
-
         blockControls = true;
 
         if (indefinite)
@@ -456,14 +427,8 @@ public class CameraControl : MonoBehaviour
     /// </summary>
     public void UnblockPlayerControls()
     {
-        if (numberOfBlockingRequests > 0)
-            numberOfBlockingRequests--;
-
-        if (numberOfBlockingRequests == 0)
-        {
-            blockControls = false;
-            timeToUnblock = 0f;
-        }
+        blockControls = false;
+        timeToUnblock = 0f;
     }
 
     /// <summary>

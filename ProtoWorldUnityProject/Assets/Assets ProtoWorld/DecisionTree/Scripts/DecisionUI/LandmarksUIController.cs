@@ -46,8 +46,8 @@ public class LandmarksUIController : MonoBehaviour
 
             // Get the needed components of the button object
             RectTransform canvasBox = landmarkButton.GetComponent<RectTransform>();
-            UnityEngine.UI.Button button = landmarkButton.transform.FindChild("Button").GetComponent<UnityEngine.UI.Button>();
-            UnityEngine.UI.Text buttonText = button.transform.FindChild("Text").GetComponent<UnityEngine.UI.Text>();
+            UnityEngine.UI.Button button = landmarkButton.transform.Find("Button").GetComponent<UnityEngine.UI.Button>();
+            UnityEngine.UI.Text buttonText = button.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
             LandmarkButtonController buttonController = landmarkButton.GetComponent<LandmarkButtonController>();
 
             // Position the button according to its parent object

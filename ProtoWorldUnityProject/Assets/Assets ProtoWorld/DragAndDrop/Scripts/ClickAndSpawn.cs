@@ -20,11 +20,12 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
  */
 
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class ClickAndSpawn : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class ClickAndSpawn : NetworkBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
 
     //this is the gameobject that will be instantiated, assign this object in the inspector of the ClickAndDrop object
@@ -40,15 +41,26 @@ public class ClickAndSpawn : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnBeginDrag(PointerEventData eventData)
     {
         //instantiate the gameobject to the hitlocation
-        GameObject obj = Instantiate(objectToInstantiate, rayHitPositionClass.hitLocation, Quaternion.identity) as GameObject;
+        CmdCreatePoint(rayHitPositionClass.hitLocation);
+
+        m_OnSpawn.Invoke();
+    }
+
+    [Command]
+    public void CmdCreatePoint(Vector3 hitLocation)
+    {
+        GameObject obj = Instantiate(objectToInstantiate, hitLocation, Quaternion.identity) as GameObject;
 
         if (objectName != "")
             obj.name = objectName + counter++;
         else
             obj.name = objectToInstantiate.name + counter++;
 
-        m_OnSpawn.Invoke();
+        NetworkServer.Spawn(obj.gameObject);
+
+        print("Created.");
     }
+
 
     public void OnDrag(PointerEventData eventData)
     {

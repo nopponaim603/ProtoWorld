@@ -27,14 +27,14 @@ public class SpawnerLineController : MonoBehaviour
 
     public int numberVehiclesOutOfService;
 
-    public bool useGlobalSpawnRate = false;
+    public bool useGlobalSpawnRate = true;
 
     [Range(1, 65535)]
-    public float localSpawnRate = 60;
+    public float localSpawnRate = 5;
 
-    protected float globalSpawnRate = 60;
+    protected float globalSpawnRate = 5;
 
-    public bool spawnFromStart = true;
+    public bool spawnFromStart = false;
 
     [Range(0, 65535)]
     public float spawnFromStartDelay = 0;

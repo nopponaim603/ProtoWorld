@@ -52,7 +52,7 @@ public class Polygon : MonoBehaviour
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
 		if (GenerateTangents) mesh.calculateMeshTangents();
-		mesh.Optimize();
+		;
 		if (GenerateTangents)
 			GetComponent<MeshCollider>().sharedMesh = mesh;
         if (ColliderAsTrigger)
@@ -104,7 +104,7 @@ public class Polygon : MonoBehaviour
 
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
-		mesh.Optimize();
+		;
 	}
 	public static void calculateMeshTangents(Mesh mesh)
     {

@@ -43,8 +43,7 @@ public class EventButtonPanelController : MonoBehaviour {
     private string eventlegendString;
 
     // Use this for initialization
-    void Awake ()
-    {
+    void Awake () {
         if (prefabEventButton == null)
         {
             Debug.LogError("prefabEventButton missing.");
@@ -91,5 +90,8 @@ public class EventButtonPanelController : MonoBehaviour {
         RectTransform panelTransform = transform as RectTransform;
         panelTransform.sizeDelta = new Vector2(panelTransform.rect.width, Mathf.Abs(buttonPosition));
         panelTransform.localPosition = new Vector3(panelTransform.localPosition.x, Mathf.Abs(buttonPosition) - parentHeight);
+
+
+
     }
 }

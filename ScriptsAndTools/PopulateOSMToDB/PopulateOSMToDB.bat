@@ -15,7 +15,7 @@ REM Argument 2: Path of the OSM file to load
 REM - IMPORTANT!! 
 REM - Configure the following parameters before running the script:
 REM ---------------------------------------------------------------------------------
-@set PATH=%PATH%;E:\Program Files\PostgreSQL\9.3\bin;E:\Program Files\PostgreSQL\9.3\extra_dep
+@set PATH=C:\Program Files\PostgreSQL\9.3\bin;C:\Program Files\PostgreSQL\9.3\extra_dep
 @set URL=127.0.0.1
 @set PGPORT=5432
 @set PGHOST=localhost
@@ -42,7 +42,7 @@ psql -U %PGUSER% -d %PGDATABASE% -f "%SETUP_FILE%"
 
 REM -- Populate osm database --
 echo Populating OSM database...
-"..\..\WCFService\OSM Populate database\bin\x86\Debug\OSM Populate database.exe" %LOAD_FILE% "Server=%URL%;Port=%PGPORT%;Database=%PGDATABASE%;User Id=%PGUSER%;Password=%PGPASSWORD%;"
+"..\..\..\WCFService\OSM Populate database\bin\x86\Debug\OSM Populate database.exe" %LOAD_FILE% "Server=%URL%;Port=%PGPORT%;Database=%PGDATABASE%;User Id=%PGUSER%;Password=%PGPASSWORD%;"
 
 REM -- Populate full extent -- 
 echo Post-processing...

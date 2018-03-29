@@ -12,7 +12,7 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -364,9 +364,6 @@ public class LineController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Not travel time could be found between "
-                + s1.stationName + " (index " + GetIndex(s1) + ") and "
-                + s2.stationName + " (index " + GetIndex(s2) + ")");
             return -1;
         }
     }

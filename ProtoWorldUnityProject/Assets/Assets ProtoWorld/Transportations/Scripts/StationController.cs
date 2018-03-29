@@ -54,8 +54,6 @@ public class StationController : MonoBehaviour
 
     public int queuing;
 
-    public TextMesh queuingTag;
-
     [System.Serializable]
     public class QueueStats
     {
@@ -77,8 +75,6 @@ public class StationController : MonoBehaviour
     /// Array of colliders containing the stations close to this station.
     /// </summary>
     private StationController[] stationsNearThisStation;
-
-    private FlashPedestriansGlobalParameters pedGlobalParam;
 
     public static StationController CreateStation(int id, Vector3 point, string name = "", bool loadStationWithLOD = true)
     {
@@ -137,8 +133,6 @@ public class StationController : MonoBehaviour
 
     void Awake()
     {
-        pedGlobalParam = FindObjectOfType<FlashPedestriansGlobalParameters>();
-
         logSeriesId = LoggerAssembly.GetLogSeriesId();
 
         //LOG STATION LOG INFO
@@ -179,9 +173,6 @@ public class StationController : MonoBehaviour
         if (nextLogUpdate < Time.time)
         {
             nextLogUpdate += LogUpdateRateInSeconds;
-
-            if (queuingTag != null)
-                queuingTag.text = (queuing * pedGlobalParam.numberOfPedestriansPerAgent).ToString();
 
             //LOG STATION QUEUING
             log.Info(string.Format("{0}:{1}:{2}:{3}", logSeriesId, "int", 0, queuing));
@@ -256,13 +247,10 @@ public class StationController : MonoBehaviour
     {
         if (outOfService)
         {
-            Debug.Log("The station is out of service");
             traveler.ArrivedAt(this);
         }
         else
         {
-            Debug.Log("Queuing " + traveler.name);
-
             string lineId = traveler.GetNextLineQueueId();
             Queue<TravelerController> queue;
             if (lineQueues.TryGetValue(lineId, out queue))

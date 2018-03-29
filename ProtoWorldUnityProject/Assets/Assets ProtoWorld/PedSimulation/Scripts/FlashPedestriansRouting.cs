@@ -29,29 +29,18 @@ using System.Collections;
 /// </summary>
 public class FlashPedestriansRouting {
 
-    public FlashPedestriansDestination destination;
-    public int destinationIndex;
+    public FlashPedestriansDestination destinationPoint;
     public Itinerary itinerary;
-
-    private Transform destinationTransform;
 
     /// <summary>
     /// Constructor of the class.
     /// </summary>
-    /// <param name="destination"></param>
+    /// <param name="destinationPoint"></param>
     /// <param name="itinerary"></param>
-    public FlashPedestriansRouting(FlashPedestriansDestination destination, Itinerary itinerary, int destIndex = 0)
+    public FlashPedestriansRouting(FlashPedestriansDestination destinationPoint, Itinerary itinerary)
     {
-        this.destination = destination;
-        this.destinationIndex = destIndex;
+        this.destinationPoint = destinationPoint;
         this.itinerary = itinerary;
-
-        destinationTransform = destination.destinationTransform[destinationIndex];
-    }
-
-    public Transform GetDestinationTransform()
-    {
-        return destinationTransform;
     }
 
     /// <summary>

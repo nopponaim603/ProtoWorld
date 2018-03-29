@@ -12,12 +12,12 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-/*
-* 
-* KPI MODULE
-* Johnson Ho
-* 
-*/
+﻿/*
+ * 
+ * KPI MODULE
+ * Johnson Ho
+ * 
+ */
 
 using UnityEngine;
 using System.Collections;
@@ -52,8 +52,8 @@ public class ValueIndicatorController : MonoBehaviour
     {
         chartController = GetComponentInParent<ChartController>();
         valueIndicator = GetComponent<Slider>();
-        valueHandleArea = transform.FindChild("Handle Slide Area").gameObject;
-        valueButtonText = transform.FindChild("Handle Slide Area/Handle/ValueTimeButton/Text").GetComponent<Text>();
+        valueHandleArea = transform.Find("Handle Slide Area").gameObject;
+        valueButtonText = transform.Find("Handle Slide Area/Handle/ValueTimeButton/Text").GetComponent<Text>();
         SetActive(false);
     }
 
@@ -67,8 +67,8 @@ public class ValueIndicatorController : MonoBehaviour
         {
             case UIChartTypes.Bar:
             case UIChartTypes.Pie:
-                //SetActive(false);
-                //break;
+                SetActive(false);
+                break;
             case UIChartTypes.Line:
             case UIChartTypes.StackedArea:
                 SetActive(true);

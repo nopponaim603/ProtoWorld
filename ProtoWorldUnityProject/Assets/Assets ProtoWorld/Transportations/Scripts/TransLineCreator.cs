@@ -143,26 +143,7 @@ public class TransLineCreator : StationCreator
     /// <summary>
     /// Add a station to the end of the transline.
     /// </summary>
-    public void AddStationToNewLine(StationController station, BaseLine line)
-    {
-        if (station == null)
-            return;
-        //Debug.Log(GetStationName(station));
-        if (!editingLineStations.Contains(station))
-        {
-            editingLineStations.Add(station);
-
-            if (editingLineStations.Count > 1)
-            {
-                int[] times = line.GetTravelingTimes();
-                travelTimes.Add(times[editingLineStations.Count-2]);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Add a station to the end of the transline with 1 as default travelling time.
-    /// </summary>
+    /// <param name="station"></param>
     public void AddStationToNewLine(StationController station)
     {
         if (station == null)
