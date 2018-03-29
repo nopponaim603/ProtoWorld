@@ -12,7 +12,7 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-/*
+﻿/*
  * 
  * KPI MODULE
  * Johnson Ho
@@ -46,11 +46,6 @@ public class ChartController : MonoBehaviour
     public int chartId;
 
     /// <summary>
-    /// The name, appears in the toolbar.
-    /// </summary>
-    public string name;
-
-    /// <summary>
     /// Whether this is a streaming chart or a static chart. 
     /// </summary>
     public bool streaming = false;
@@ -76,7 +71,8 @@ public class ChartController : MonoBehaviour
     /// In streaming chart:
     /// How many data points to be visualized.
     /// </summary>
-    [Range(2, 1000)] public int numberOfSamples = 100;
+    [Range(2, 1000)]
+    public int numberOfSamples = 100;
 
     /// <summary>
     /// How the Y-values are formated.
@@ -88,7 +84,7 @@ public class ChartController : MonoBehaviour
     /// Set the preferred maximum Y-value.
     /// This value will increase if maxYCanOnlyIncrease is set to true.
     /// </summary>
-    public float preferredMaxYValue = 10;
+    public float preferredMaxYValue = 100;
 
     /// <summary>
     /// In streaming chart:
@@ -109,39 +105,25 @@ public class ChartController : MonoBehaviour
     /// <summary>
     /// Colors for the different series.
     /// </summary>
-    public Color32[] seriesColors = new Color32[]
-    {
-        new Color32(166, 206, 227, 255), // #A6CEE3
-        new Color32(178, 223, 138, 255), // #B2DF8A
-        new Color32(251, 154, 153, 255), // #FB9A99
-        new Color32(253, 191, 111, 255), // #FDBF6F
-        new Color32(202, 178, 214, 255), // #CAB2D6
-        new Color32(225, 255, 153, 255), // #E1FF99
-        new Color32( 31, 120, 180, 255), // #1F78B4
-        new Color32( 51, 160,  44, 255), // #33A02C
-        new Color32(227,  26, 227, 255), // #E31AE3
-        new Color32(255, 127,   0, 255), // #FF7F00
-        new Color32(106,  61, 154, 255), // #6A3D9A
-        new Color32(130, 147,  88, 255)  // #829358
-    };
+    public Color32[] seriesColors = new Color32[] { Color.blue, Color.green, Color.red, Color.magenta, Color.black };
 
     /// <summary>
     /// Names for the different series.
     /// </summary>
     public string[] seriesNames = new string[5];
 
-    public List<string> seriesHidden = new List<string>();
-
     /// <summary>
     /// Used by this and the axisController to set the colors of the series
     /// and the background of the legends.
     /// </summary>
-    [HideInInspector] public Material[] materials = new Material[5];
+    [HideInInspector]
+    public Material[] materials = new Material[5];
 
     /// <summary>
     /// Used by the valueIndicator. 
     /// </summary>
-    [HideInInspector] public float[] values;
+    [HideInInspector]
+    public float[] values;
 
     /// <summary>
     /// Every series has its own update timer.
@@ -151,7 +133,8 @@ public class ChartController : MonoBehaviour
     /// <summary>
     /// Used by the valueIndicator.
     /// </summary>
-    [HideInInspector] public float valueTime;
+    [HideInInspector]
+    public float valueTime;
 
     /// <summary>
     /// An indicator that shows when a logged event occured in relation to the time-data series.
@@ -185,27 +168,18 @@ public class ChartController : MonoBehaviour
     /// Whether we should generate random data for testing.
     /// </summary>
     public bool testing = false;
-
     /// <summary>
     /// Number of series used in testing.
     /// </summary>
     public int numberOfSeries = 0;
-
     /// <summary>
     /// Upper bound of the random value.
     /// </summary>
     public float randomSeedUpper = 20;
-
     /// <summary>
     /// Lower bound of the random value.
     /// </summary>
     public float randomSeedLower = -20;
-
-
-    /// <summary>
-    /// Minimize button
-    /// </summary>
-    public GameObject contentPanel;
 
     void Awake()
     {
@@ -227,19 +201,6 @@ public class ChartController : MonoBehaviour
         eventIndicatorView = GetComponentInChildren<EventIndicatorController>();
         valueIndicatorView = GetComponentInChildren<ValueIndicatorController>();
 
-		// TODO Dirteh hack!
-		transform.Find("Toolbar/ChartTitleText").GetComponent<Text>().text = name;
-
-        //automatically select the correct chart type
-        Dropdown dropdown = transform.Find("Toolbar/ChartType/Dropdown").GetComponent<Dropdown>();
-        for (int i = 0; i < dropdown.options.Count; i++)
-        {
-            if (dropdown.options[i].text == chartType.ToString())
-            {
-                dropdown.value = i;
-                break;
-            }
-        }
     }
 
     /// <summary>
@@ -366,11 +327,6 @@ public class ChartController : MonoBehaviour
             {
                 colors[i] = seriesColors[i];
             }
-            //fill remaining empty slots
-            for (int i = seriesColors.Length; i < colors.Length; i++)
-            {
-                colors[i] = seriesColors[i % seriesColors.Length];
-            }
             seriesColors = colors;
         }
         //Debug.Log(seriesIndex);
@@ -396,10 +352,9 @@ public class ChartController : MonoBehaviour
     void InitMaterials()
     {
         materials = new Material[seriesColors.Length];
-        Shader s = Shader.Find("UI/Default");
         for (int i = 0; i < seriesColors.Length; i++)
         {
-            materials[i] = new Material(s);
+            materials[i] = new Material(Shader.Find("UI/Default"));
             materials[i].color = seriesColors[i];
         }
     }
@@ -432,6 +387,7 @@ public class ChartController : MonoBehaviour
             DataContainer.Add(0, i, UnityEngine.Random.Range(randomSeedLower, randomSeedUpper));
         }
         SetChartType(UIChartTypes.Line);
+        SetChartType(UIChartTypes.Line);
         for (int i = 0; i < numberOfSamples; i++)
         {
             DataContainer.Add(1, i, UnityEngine.Random.Range(randomSeedLower, randomSeedUpper));
@@ -443,13 +399,6 @@ public class ChartController : MonoBehaviour
         SeriesCount += 1;
         Debug.Log("Series count: " + SeriesCount);
         return SeriesCount - 1;
-    }
-
-    public void RegisterNewKPI(string kpi)
-    {
-        int series = RegisterNewKPI();
-        SetSeriesName(series, kpi);
-        Debug.Log("Registered KPI " + series + " - " + kpi);
     }
 
     public void AddTimedData(int seriesIndex, float value)
@@ -488,11 +437,6 @@ public class ChartController : MonoBehaviour
     /// <param name="name"></param>
     public void SetSeriesName(int seriesIndex, string name)
     {
-        if (name == null || name == "")
-        {
-            Debug.LogWarning("Series with empty name being created for " + name + " (" + chartType + ")");
-            return;
-        }
         if (seriesIndex >= seriesNames.Length)
         {
             var names = new string[seriesIndex + 1];
@@ -525,6 +469,7 @@ public class ChartController : MonoBehaviour
     /// </summary>
     void UpdateTimeInEventIndicator()
     {
+
         eventIndicatorView.SetMinTime(DataContainer.GetFirstDataTime(0));
         eventIndicatorView.SetMaxTime(DataContainer.GetLastDataTime(0));
     }
@@ -613,10 +558,7 @@ public class ChartController : MonoBehaviour
         //    }
         //}
 
-        Rect minmax = DataContainer.MinMaxOfAll;
-        if (chartType == UIChartTypes.StackedArea)
-            minmax = DataContainer.MinMaxStacked;
-
+        var minmax = DataContainer.MinMaxOfAll;
         if (maxYCanOnlyIncrease)
             currentMaxY = (minmax.yMax > currentMaxY) ? minmax.yMax : currentMaxY;
         else
@@ -677,13 +619,4 @@ public class ChartController : MonoBehaviour
         return DataContainer.GetTotalMinTime();
     }
 
-    public bool isSeriesHidden(String kpi_name)
-    {
-        return seriesHidden.Contains(kpi_name);
-    }
-
-    public bool isSeriesHidden(int index)
-    {
-        return isSeriesHidden(seriesNames[index]);
-    }
 }

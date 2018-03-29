@@ -30,6 +30,6 @@ public class LandmarkController : MonoBehaviour
 
 	void Awake () 
     {
-        this.transform.FindChild("Tag").GetComponent<TextMesh>().text = landmarkTag;
+        this.transform.Find("Tag").GetComponent<TextMesh>().text = landmarkTag;
 	}
 }

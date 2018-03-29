@@ -17,7 +17,6 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
  * ELEMENT UI
  * FadingElementUI.cs
  * Miguel Ramos Carretero
- * Modified by Furkan
  * 
  */
 
@@ -40,8 +39,7 @@ public class FadingElementUI : MonoBehaviour
     void Start()
     {
         canvasGroup = this.GetComponent<CanvasGroup>();
-    	canvasGroup.alpha = 0.0f;
-		this.gameObject.GetComponent<CanvasGroup> ().blocksRaycasts = false;
+        canvasGroup.alpha = 0.0f;
     }
 
     /// <summary>
@@ -51,20 +49,17 @@ public class FadingElementUI : MonoBehaviour
     {
         if (fading)
         {
-			if (isFadingIn) {
-				if (canvasGroup.alpha == 1.0f){
-					this.gameObject.GetComponent<CanvasGroup> ().blocksRaycasts = true; //Block raycasts when faded out
-					fading = false;
-			}
+            if (isFadingIn)
+            {
+                if (canvasGroup.alpha == 1.0f)
+                    fading = false;
                 else
                     canvasGroup.alpha += 0.05f * fadingSpeedFactor;
             }
             else
             {
-				if (canvasGroup.alpha == 0.0f) {
-					this.gameObject.GetComponent<CanvasGroup> ().blocksRaycasts = false; //Dont block raycasts when faded out
-					fading = false;
-				}
+                if (canvasGroup.alpha == 0.0f)
+                    fading = false;
                 else
                     canvasGroup.alpha -= 0.05f * fadingSpeedFactor;
             }

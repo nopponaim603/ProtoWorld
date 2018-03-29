@@ -31,14 +31,11 @@ public class FlashBikingBehaviour : StateMachineBehaviour
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) 
     {
         FlashPedestriansController fpc = animator.GetComponent<FlashPedestriansController>();
+
         if (fpc.targetedBikeStation.capacityNumber > 0)
         {
             fpc.targetedBikeStation.PickBike();
             fpc.GoBikingToDestination();
-
-            GameObject TransportationModule = GameObject.Find("TransportationModule");
-            KPIPassengersPerType kpipassengers = TransportationModule.GetComponent<KPIPassengersPerType>();
-            kpipassengers.bicyclePassengers++;
         }
         else
         {

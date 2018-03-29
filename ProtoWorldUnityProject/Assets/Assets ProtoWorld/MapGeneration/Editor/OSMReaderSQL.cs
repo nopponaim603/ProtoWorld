@@ -34,6 +34,7 @@ using Aram.OSMParser;
 using GapslabWCFservice;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class OSMReaderSQL : Editor
 {
@@ -49,9 +50,9 @@ public class OSMReaderSQL : Editor
         CalculateBoundaries(mapproperties);
         ImportOSMDataSQL_ServerSide(true, true, true);
         Vector3 scale = new Vector3(mapproperties.Scale.x, 1, mapproperties.Scale.y);
-        GroupObjectsWithTags("Lines", "Lines", new string[] { "Line" }, scale, false, true);
-        GroupObjectsWithTags("Buildings", "Buildings", new string[] { "Building" }, scale, false, true);
-        GroupObjectsWithTags("Areas", "Default", new string[] { "Area" }, scale, false, true);
+        GroupObjectsWithTags("Lines", new string[] { "Line" }, scale, false, true);
+        GroupObjectsWithTags("Buildings", new string[] { "Building" }, scale, false, true);
+        GroupObjectsWithTags("Areas", new string[] { "Area" }, scale, false, true);
         //GroupLines(false);
         AssignStaticLayers();
         //BakeNavigation();
@@ -65,7 +66,7 @@ public class OSMReaderSQL : Editor
         CalculateBoundaries(mapproperties);
         ImportOSMDataSQL_ServerSide(true, false, true);
         Vector3 scale = new Vector3(mapproperties.Scale.x, 1, mapproperties.Scale.y);
-        GroupObjectsWithTags("Buildings", "Buildings", new string[] { "Building" }, scale, false);
+        GroupObjectsWithTags("Buildings", new string[] { "Building" }, scale, false);
         //GroupBuildings();
         AssignStaticLayers();
         //BakeNavigation();
@@ -80,13 +81,13 @@ public class OSMReaderSQL : Editor
         CalculateBoundaries(mapproperties);
         ImportOSMDataSQL_ServerSide(true, true, false);
         Vector3 scale = new Vector3(mapproperties.Scale.x, 1, mapproperties.Scale.y);
-        GroupObjectsWithTags("Lines", "Lines", new string[] { "Line" }, scale, false, true);
+        GroupObjectsWithTags("Lines", new string[] { "Line" }, scale, false, true);
         //GroupRoads();
         AssignStaticLayers();
         //BakeNavigation();
     }
 
-    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Generate water areas")]
+    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Generate water areas")]
     static public void CreateWaterAreas()
     {
         var go = GameObject.Find("AramGISBoundaries");
@@ -94,11 +95,11 @@ public class OSMReaderSQL : Editor
         string[][] tags = new string[1][];
         tags[0] = new string[] { "natural", "water" };
         ImportOSMDataSQL_ArbitraryShapeFromWay(tags, "Water", "Water", properties.WaterMaterial.name, 0f);
-        GroupObjectsWithTags("Water Areas", "Water", new string[] { "Water" }, Vector3.zero, false, true);
+        GroupObjectsWithTags("Water Areas", new string[] { "Water" }, Vector3.zero, false, true);
         //AddBusStopLogic();
     }
 
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Clean Map", false, 3)]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Clean map", false, 3)]
     static void CleanScene()
     {
         var gos = GameObject.FindGameObjectsWithTag("Line");
@@ -132,7 +133,7 @@ public class OSMReaderSQL : Editor
         }
     }
 
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Generate Roads with Filter")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Generate roads with filter")]
     static void Create2_4()
     {
         GenerateOSMRoadsWithFilterWindow window = (GenerateOSMRoadsWithFilterWindow)EditorWindow.GetWindow(typeof(GenerateOSMRoadsWithFilterWindow), true, "Road generation with filters");
@@ -155,7 +156,7 @@ public class OSMReaderSQL : Editor
         string[][] tags = new string[1][];
         tags[0] = new string[] { "highway", "traffic_signals" };
         ImportOSMDataSQL_Billboard(tags, "TrafficLight", "TrafficLight", "TrafficLight", 0.5f);
-        GroupObjectsWithTags("Traffic Lights", "Default", new string[] { "TrafficLight" }, Vector3.zero, true, true);
+        GroupObjectsWithTags("Traffic Lights", new string[] { "TrafficLight" }, Vector3.zero, true, true);
     }
 
     //[MenuItem("ProtoWorld Editor/Scenario/Bus stops from the database")]
@@ -165,7 +166,7 @@ public class OSMReaderSQL : Editor
         tags[0] = new string[] { "highway", "bus_stop" };
         tags[1] = new string[] { "bus", "yes" };
         ImportOSMDataSQL_Billboard(tags, "BusStop", "BusStop", "BusStopMaterial", 0.5f);
-        GroupObjectsWithTags("Bus stops", "Default", new string[] { "BusStop" }, Vector3.zero, true, true);
+        GroupObjectsWithTags("Bus stops", new string[] { "BusStop" }, Vector3.zero, true, true);
         //AddBusStopLogic();
     }
 
@@ -176,8 +177,8 @@ public class OSMReaderSQL : Editor
         var mapproperties = globalO.GetComponent<MapBoundaries>();
         ImportOSMDataSQL(true, true, true);
         Vector3 scale = new Vector3(mapproperties.Scale.x, 1, mapproperties.Scale.y);
-        GroupObjectsWithTags("Lines", "Lines", new string[] { "Line" }, scale, false, true);
-        GroupObjectsWithTags("Buildings", "Buildings", new string[] { "Building" }, scale, false, true);
+        GroupObjectsWithTags("Lines", new string[] { "Line" }, scale, false, true);
+        GroupObjectsWithTags("Buildings", new string[] { "Building" }, scale, false, true);
         //GroupLines(false);
         AssignStaticLayers();
     }
@@ -443,8 +444,8 @@ public class OSMReaderSQL : Editor
             var globalO = GameObject.Find("AramGISBoundaries");
             var mapproperties = globalO.GetComponent<MapBoundaries>();
             Vector3 scale = new Vector3(mapproperties.Scale.x, 1, mapproperties.Scale.y);
-            GroupObjectsWithTags("Lines", "Lines", new string[] { "Line" }, scale, false, true);
-            GroupObjectsWithTags("Buildings", "Buildings", new string[] { "Building" }, scale, false, true);
+            GroupObjectsWithTags("Lines", new string[] { "Line" }, scale, false, true);
+            GroupObjectsWithTags("Buildings", new string[] { "Building" }, scale, false, true);
         }
         catch (System.Exception e)
         {
@@ -465,7 +466,7 @@ public class OSMReaderSQL : Editor
         var globalO = GameObject.Find("AramGISBoundaries");
         var mapproperties = globalO.GetComponent<MapBoundaries>();
         Vector3 scale = new Vector3(mapproperties.Scale.x, 1, mapproperties.Scale.y);
-        GroupObjectsWithTags("MockDataGroup", "Default", new string[] { "MockData" }, scale, false);
+        GroupObjectsWithTags("MockDataGroup", new string[] { "MockData" }, scale, false);
     }
 
     //[MenuItem("Gapslabs Extended Editor/Generate and save as Obj/From the database(roads+Building Shapes)", false, 1)]
@@ -563,7 +564,7 @@ public class OSMReaderSQL : Editor
 
         //ImportOSMDataSQL_ServerSide_Extra(true, true, false, TagValues: tags);
         Vector3 scale = new Vector3(mapproperties.Scale.x, 1, mapproperties.Scale.y);
-        GroupObjectsWithTags("Lines", "Lines", new string[] { "Line" }, scale, false, true);
+        GroupObjectsWithTags("Lines", new string[] { "Line" }, scale, false, true);
         AssignStaticLayers();
     }
 
@@ -582,10 +583,8 @@ public class OSMReaderSQL : Editor
         var trafficRoads = "TrafficRoads";
         var trafficRoadsLayer = LayerMask.NameToLayer(trafficRoads);
         var walkableLayer = LayerMask.NameToLayer(layerFootway); //Added by Miguel R. C.
-		var buildings = "Buildings";
-		var buildingsLayer = LayerMask.NameToLayer(buildings); //Added by GameLab
 
-		if (!navLayers.Contains(layerVehicle))
+        if (!navLayers.Contains(layerVehicle))
         {
             Debug.LogError(string.Format(layerError, layerVehicle));
             proceed = false;
@@ -691,11 +690,8 @@ public class OSMReaderSQL : Editor
                                     visibleObjects[i].gameObject.layer = trafficRoadsLayer;
                                     GameObjectUtility.SetStaticEditorFlags(visibleObjects[i].gameObject, StaticEditorFlags.OccludeeStatic | StaticEditorFlags.OccluderStatic | StaticEditorFlags.NavigationStatic);
                                     GameObjectUtility.SetNavMeshArea(visibleObjects[i].gameObject, (int)layers[layerVehicle]);
-								}
-								else if(matname.Contains("Building")) {
-									visibleObjects[i].gameObject.layer = buildingsLayer; //Added by GameLab
-								}
-							}
+                                }
+                            }
                         }
                         catch (System.Exception ex)
                         {
@@ -717,8 +713,10 @@ public class OSMReaderSQL : Editor
 
     private static void BakeNavigation()
     {
-        NavMeshBuilder.ClearAllNavMeshes();
-        NavMeshBuilder.BuildNavMeshAsync();
+        //print("Skip Bake Navigation.");
+        //NavMeshBuilder.Cancel();
+        //NavMeshBuilder.BuildNavMeshData();
+       
     }
 
     public override void OnInspectorGUI()
@@ -738,7 +736,7 @@ public class OSMReaderSQL : Editor
             if (!EditorUtility.DisplayCancelableProgressBar("Grouping in progress", "Grouping all the buildings\t" + i + "/" + gos.Length, i / (float)gos.Length))
             {
                 gos[i].transform.parent = go.transform;
-			}
+            }
             else
             {
                 EditorUtility.ClearProgressBar();
@@ -750,7 +748,7 @@ public class OSMReaderSQL : Editor
         EditorUtility.ClearProgressBar();
     }
 
-    static void GroupObjectsWithTags(string GroupName, string LayerName, string[] Tags, Vector3 OverrideScale, bool addfaceCamera = true, bool applyScaleToTheObjects = false)
+    static void GroupObjectsWithTags(string GroupName, string[] Tags, Vector3 OverrideScale, bool addfaceCamera = true, bool applyScaleToTheObjects = false)
     {
         //NOTE: <param name="OverrideScale">Pass Vector3.zero to ignore, otherwise to override.</param>
 
@@ -758,8 +756,6 @@ public class OSMReaderSQL : Editor
         var mapproperties = globalO.GetComponent<MapBoundaries>();
         GameObject go = new GameObject(GroupName);
         List<GameObject> gos = new List<GameObject>();
-
-		go.layer = LayerMask.NameToLayer(LayerName);
 
         if (OverrideScale == Vector3.zero)
             OverrideScale = new Vector3(mapproperties.Scale.x, mapproperties.Scale.x, mapproperties.Scale.y);

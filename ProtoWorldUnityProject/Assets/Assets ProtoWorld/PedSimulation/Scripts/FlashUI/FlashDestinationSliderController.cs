@@ -65,7 +65,7 @@ public class FlashDestinationSliderController : MonoBehaviour, IPointerUpHandler
 
     public void UpdateDestinationPriority(float value)
     {
-        UnityEngine.UI.Text valueText = this.transform.FindChild("ValueText").GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text valueText = this.transform.Find("ValueText").GetComponent<UnityEngine.UI.Text>();
         destination.destinationPriority = value;
         valueText.text = value.ToString();
     }

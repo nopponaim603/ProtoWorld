@@ -55,13 +55,9 @@ namespace TrafficFileToPWS
             XmlReader reader;
             StreamReader streamReader;
             bool endReached = false;
-			
-			if(String.IsNullOrWhiteSpace(outputFilePrefix)) {
-				outputFilePrefix = Path.GetFileNameWithoutExtension(pathChoosenFile);
-			}
 
-			// Open the FCD file and create the XML reader
-			inputFile = File.OpenRead(pathChoosenFile);
+            // Open the FCD file and create the XML reader
+            inputFile = File.OpenRead(pathChoosenFile);
             streamReader = new StreamReader(inputFile);
             reader = XmlReader.Create(streamReader);
 
@@ -141,7 +137,7 @@ namespace TrafficFileToPWS
 
                                     writer.Close();
                                     descriptorOutputFile.Close();
-                                    pathOutputFile = pathDestinationFolder + "\\" + outputFilePrefix + ".pws.meta";
+                                    pathOutputFile = pathDestinationFolder + "\\" + outputFilePrefix + "_" + ".pws.meta";
                                     descriptorOutputFile = File.Create(pathOutputFile);
                                     writer = new StreamWriter(descriptorOutputFile);
                                     WriteMetaData(times, outputFilenames, writer);
@@ -214,17 +210,13 @@ namespace TrafficFileToPWS
             FileStream descriptorOutputFile;
             StreamWriter writer;
             FileInfo fInfo;
-			
-			if(String.IsNullOrWhiteSpace(outputFilePrefix)) {
-				outputFilePrefix = Path.GetFileNameWithoutExtension(pathChoosenFile);
-			}
 
-			// Create a reader for the input file
-			FileStream fileStream = File.OpenRead(pathChoosenFile);
+            // Create a reader for the input file
+            FileStream fileStream = File.OpenRead(pathChoosenFile);
             StreamReader reader = new StreamReader(fileStream);
 
-			// Create the first output file
-			pathOutputFile = pathDestinationFolder + "\\" + outputFilePrefix + "_" + firstTimeStepOutputFile + ".pws";
+            // Create the first output file
+            pathOutputFile = pathDestinationFolder + "\\" + outputFilePrefix + "_" + firstTimeStepOutputFile + ".pws";
             Console.WriteLine("Creating new output file");
             descriptorOutputFile = File.Create(pathOutputFile);
             writer = new StreamWriter(descriptorOutputFile);

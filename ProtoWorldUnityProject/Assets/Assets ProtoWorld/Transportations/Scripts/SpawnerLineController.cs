@@ -56,9 +56,7 @@ public class SpawnerLineController : MonoBehaviour
     public void Start()
     {
         timeController = GameObject.FindObjectOfType<TimeController>();
-		if(timeController == null)
-			Debug.LogError("No timeController found!");
-		mainRouter = GameObject.FindObjectOfType<RoutingController>();
+        mainRouter = GameObject.FindObjectOfType<RoutingController>();
         if (mainRouter == null)
             Debug.LogError("No routingController found!");
         transline = GetComponent<LineController>();
@@ -134,8 +132,6 @@ public class SpawnerLineController : MonoBehaviour
         {
             vehicle = VehicleController.CreateGameObject(transline, LineDirection.OutBound);
             vehicle.transform.SetParent(transform);
-			// Provide this from our cached version to improve performance, as this is called a lot during spawning events.
-			vehicle.GetComponent<VehicleController>().timeController = timeController;
             transline.AddVehicle(vehicle);
         }
         if (vehiclesOutOfService.Count > 0)
@@ -149,9 +145,7 @@ public class SpawnerLineController : MonoBehaviour
         {
             vehicle = VehicleController.CreateGameObject(transline, LineDirection.InBound);
             vehicle.transform.SetParent(transform);
-			// Provide this from our cached version to improve performance, as this is called a lot during spawning events.
-			vehicle.GetComponent<VehicleController>().timeController = timeController;
-			transline.AddVehicle(vehicle);
+            transline.AddVehicle(vehicle);
         }
     }
 

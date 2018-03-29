@@ -36,21 +36,14 @@ public class ProtoWorldMenu : MonoBehaviour
     static string transModuleName = "TransportationModule";
     static string ddModuleName = "DragAndDropModule";
     static string kpiModuleName = "KPIModule";
-    static string kpiChartName = "KPIChart";
     static string sumoComModuleName = "SumoComFullModule";
     static string traffIntegModuleName = "TrafficIntegrationModule";
     static string decisionTreeModuleName = "DecisionTreeModule";
+    static string kpiChartName = "KPIChart";
     static string loggerAssemblyName = "LoggerAssembly";
     static string vvisName = "VVisDataSQLiteModule";
-	static string cameraFeedModuleName = "CameraFeedModule";
-	static string feedCameraName = "FeedCamera";
-	static string issuesModuleName = "IssuesModule";
-	static string issueName = "Issue";
-	static string heatMapModuleName = "HeatMapModule";
-	static string microMacroVisualisationModuleName = "MicroMacroVisualisationModule";
-	static string historicalDataModuleName = "HistoricalDataModule";
 
-	[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Add Essentials", false, 0)]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Add Essentials", false, 0)]
     static void AddEssentialsModuleToScene()
     {
         DestroyImmediate(GameObject.Find("Main Camera"));
@@ -250,7 +243,7 @@ public class ProtoWorldMenu : MonoBehaviour
     static void ClearDragAndDrop()
     {
         var option = EditorUtility.DisplayDialogComplex(
-            "Drag and Drop Module",
+            "Drag and Drop",
             "Do you want to remove " + ddModuleName,
             "Clear",
             "Do not clear",
@@ -273,34 +266,16 @@ public class ProtoWorldMenu : MonoBehaviour
     {
         AddModuleIfNotExist(kpiModuleName);
 
-        var parent = GameObject.Find("KPICanvas/ChartPanel");
+        var parent = GameObject.Find("KPICanvas");
         if (parent != null)
         {
-			// Find the insertion height before inserting the chart.
-			float y = 0;
-			for(int index = 0; index < parent.transform.childCount; index++) {
-				var child = parent.transform.GetChild(index);
-				if(child.gameObject.name == "KPIChart") {
-					y -= child.GetComponent<RectTransform>().sizeDelta.y;
-				}
-			}
-
             var chart = AddPrefabToScene(kpiChartName);
             chart.transform.SetParent(parent.transform);
             var rectTrans = chart.transform as RectTransform;
-            // Move the chart to the next position in the chart panel.
-			rectTrans.localPosition = new Vector3(0, y, 0);
+            // Move the chart to position 0,0,0.
+            rectTrans.localPosition = Vector3.zero;
             // If the module is newly added, the scale somehow became 0,0,0 (?!)
             rectTrans.localScale = Vector3.one;
-
-            //Initialize the values of the KPIChart
-            var feeder = chart.GetComponent<KPIFeeder>();
-            feeder.chartType = UIChartTypes.Line;
-            feeder.gameObjects = new List<GameObject>();
-            feeder.kpiStrings = new List<string>();
-            feeder.kpiNames = new List<string>();
-            feeder.kpiColors = new List<Color>();
-
             Selection.activeGameObject = chart;
         }
     }
@@ -309,7 +284,7 @@ public class ProtoWorldMenu : MonoBehaviour
     static void ClearKPIModule()
     {
         var option = EditorUtility.DisplayDialogComplex(
-            "KPI Module",
+            "Drag and Drop",
             "Do you want to remove " + kpiModuleName,
             "Clear",
             "Do not clear",
@@ -585,152 +560,9 @@ public class ProtoWorldMenu : MonoBehaviour
         {
             GameObject.DestroyImmediate(go[i]);
         }
-	}
+    }
 
-	[MenuItem("ProtoWorld Editor/Camera Feed Module/Add Camera Feed", false, 8)]
-	static void AddCameraFeedModule() {
-		AddModuleIfNotExist(cameraFeedModuleName);
-
-        var parent = GameObject.Find("CameraFeedModule/FeedCameras");
-        if (parent != null)
-        {
-			var feedCamera = AddPrefabToScene(feedCameraName);
-            feedCamera.transform.SetParent(parent.transform);
-
-            Selection.activeGameObject = feedCamera;
-        }
-	}
-
-	[MenuItem("ProtoWorld Editor/Camera Feed Module/Remove Module", false, 8)]
-	static void ClearCameraFeedModule() {
-		var option = EditorUtility.DisplayDialogComplex(
-	"Camera Feed Module",
-	"Do you want to remove " + cameraFeedModuleName,
-	"Clear",
-	"Do not clear",
-	"Cancel");
-
-		switch(option) {
-			case 0:
-				DestroyImmediate(GameObject.Find(cameraFeedModuleName));
-				Debug.Log("The module is removed.");
-				return;
-			default:
-				Debug.Log("User cancelled the operation.");
-				return;
-		}
-	}
-
-	[MenuItem("ProtoWorld Editor/Issues Module/Add Issue", false, 8)]
-	static void AddIssuesModule() {
-		AddModuleIfNotExist(issuesModuleName);
-
-        var parent = GameObject.Find("IssuesModule/Issues");
-        if (parent != null)
-        {
-			var issue = AddPrefabToScene(issueName);
-            issue.transform.SetParent(parent.transform);
-
-            Selection.activeGameObject = issue;
-        }
-	}
-
-	[MenuItem("ProtoWorld Editor/Issues Module/Remove Module", false, 8)]
-	static void ClearIssuesModule() {
-		var option = EditorUtility.DisplayDialogComplex(
-	"Issues Module",
-	"Do you want to remove " + issuesModuleName,
-	"Clear",
-	"Do not clear",
-	"Cancel");
-
-		switch(option) {
-			case 0:
-				DestroyImmediate(GameObject.Find(issuesModuleName));
-				Debug.Log("The module is removed.");
-				return;
-			default:
-				Debug.Log("User cancelled the operation.");
-				return;
-		}
-	}
-
-	[MenuItem("ProtoWorld Editor/Heatmap Module/Add Heatmap Module", false, 8)]
-	static void AddHeatMapModule() {
-		AddModuleIfNotExist(heatMapModuleName);
-	}
-
-	[MenuItem("ProtoWorld Editor/Heatmap Module/Remove Module", false, 8)]
-	static void ClearHeatMapModule() {
-		var option = EditorUtility.DisplayDialogComplex(
-	"Heatmap Module",
-	"Do you want to remove " + heatMapModuleName,
-	"Clear",
-	"Do not clear",
-	"Cancel");
-
-		switch(option) {
-			case 0:
-				DestroyImmediate(GameObject.Find(heatMapModuleName));
-				Debug.Log("The module is removed.");
-				return;
-			default:
-				Debug.Log("User cancelled the operation.");
-				return;
-		}
-	}
-
-	[MenuItem("ProtoWorld Editor/Micro Macro Visualisation Module/Add Micro Macro Visualisation Module", false, 8)]
-	static void AddMicroMacroVisualisationModule() {
-		AddModuleIfNotExist(microMacroVisualisationModuleName);
-	}
-
-	[MenuItem("ProtoWorld Editor/Micro Macro Visualisation Module/Remove Module", false, 8)]
-	static void ClearMicroMacroVisualisationModule() {
-		var option = EditorUtility.DisplayDialogComplex(
-	"Micro Macro Visualisation Module",
-	"Do you want to remove " + microMacroVisualisationModuleName,
-	"Clear",
-	"Do not clear",
-	"Cancel");
-
-		switch(option) {
-			case 0:
-				DestroyImmediate(GameObject.Find(microMacroVisualisationModuleName));
-				Debug.Log("The module is removed.");
-				return;
-			default:
-				Debug.Log("User cancelled the operation.");
-				return;
-		}
-	}
-
-	[MenuItem("ProtoWorld Editor/Historical Data Module/Add Historical Data Module", false, 8)]
-	static void AddHistoricalDataModule() {
-		AddModuleIfNotExist(historicalDataModuleName);
-	}
-
-	[MenuItem("ProtoWorld Editor/Historical Data Module/Remove Module", false, 8)]
-	static void ClearHistoricalDataModule() {
-		var option = EditorUtility.DisplayDialogComplex(
-	"Historical Data Module",
-	"Do you want to remove " + historicalDataModuleName,
-	"Clear",
-	"Do not clear",
-	"Cancel");
-
-		switch(option) {
-			case 0:
-				DestroyImmediate(GameObject.Find(historicalDataModuleName));
-				Debug.Log("The module is removed.");
-				return;
-			default:
-				Debug.Log("User cancelled the operation.");
-				return;
-		}
-	}
-
-	public static GameObject AddModuleIfNotExist(string moduleName)
+    public static GameObject AddModuleIfNotExist(string moduleName)
     {
         var go = GameObject.Find(moduleName);
         if (go == null)
@@ -739,8 +571,7 @@ public class ProtoWorldMenu : MonoBehaviour
             if (go == null)
                 Debug.Log("There is no " + moduleName);
         }
-		// TODO Currently disabled to speed up development.
-        //PrefabUtility.DisconnectPrefabInstance(go);
+        PrefabUtility.DisconnectPrefabInstance(go);
         // NB: Do not set activeGameObject = go, otherwise all the CreatorEditors will not work.
         return go;
     }
@@ -761,8 +592,7 @@ public class ProtoWorldMenu : MonoBehaviour
                 {
                     var prefab = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject)) as GameObject;
                     instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
-					// TODO Currently disabled to speed up development.
-					//PrefabUtility.DisconnectPrefabInstance(instance);
+                    PrefabUtility.DisconnectPrefabInstance(instance);
                     Undo.RegisterCreatedObjectUndo(instance, "Prefab instantiated...");
                     Debug.Log(prefabName + " was added to the scene.");
                     foundPrefab = true;

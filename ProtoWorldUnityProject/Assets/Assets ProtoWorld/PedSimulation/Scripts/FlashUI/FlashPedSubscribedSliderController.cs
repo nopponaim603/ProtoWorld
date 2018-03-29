@@ -64,7 +64,7 @@ public class FlashPedSubscribedSliderController : MonoBehaviour, IPointerUpHandl
         if (globalFlashParam != null)
             globalFlashParam.percOfPedSubscribed = value / 100.0f;
 
-        this.transform.FindChild("ValueText").GetComponent<UnityEngine.UI.Text>().text = value.ToString();
+        this.transform.Find("ValueText").GetComponent<UnityEngine.UI.Text>().text = value.ToString();
     }
 
     public void OnPointerUp(PointerEventData eventData)

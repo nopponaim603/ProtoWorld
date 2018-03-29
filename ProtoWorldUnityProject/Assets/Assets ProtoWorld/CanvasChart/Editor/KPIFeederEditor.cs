@@ -12,12 +12,12 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-/*
-* 
-* KPI MODULE
-* Johnson Ho
-* 
-*/
+﻿/*
+ * 
+ * KPI MODULE
+ * Johnson Ho
+ * 
+ */
 
 using UnityEngine;
 using System.Collections;
@@ -35,31 +35,30 @@ public class KPIFeederEditor : Editor
     void OnEnable()
     {
         m_Feeder = target as KPIFeeder;
+        m_Feeder.gameObjects = new List<GameObject>();
+        m_Feeder.kpiStrings = new List<string>();
+        m_Feeder.kpiNames = new List<string>();
+        m_Feeder.kpiColors = new List<Color>();
+
     }
 
-    /// <summary>
-    /// Draw KPIFeeder to be able to set the gameobject of interest.
-    /// </summary>
     public override void OnInspectorGUI()
     {
+        // Draw KPIFeeder to be able to set the gameobject of interest.
         EditorGUILayout.BeginVertical("box");
         DrawDefaultInspector();
         EditorGUILayout.EndVertical();
 
+        // Draw the chosen kpis.
         EditorGUILayout.BeginVertical("box");
-
         EditorGUILayout.BeginHorizontal();
-
         EditorGUILayout.LabelField("Chosen KPIs: " + m_Feeder.kpiStrings.Count, EditorStyles.boldLabel);
-
         GUI.color = Color.red;
         if (GUILayout.Button("Clear KPIs"))
         {
             m_Feeder.RemoveAllKPIs();
         }
-
         GUI.color = Color.yellow;
-
         if (GUILayout.Button("Apply settings"))
         {
             // When the feeder is a prefab, the settings are reverted for some reason.
@@ -73,9 +72,7 @@ public class KPIFeederEditor : Editor
         }
 
         EditorGUILayout.EndHorizontal();
-
         EditorGUILayout.Space();
-
         for (int i = 0; i < m_Feeder.kpiStrings.Count; i++)
         {
             GUI.color = Color.white;
@@ -90,80 +87,74 @@ public class KPIFeederEditor : Editor
                 m_Feeder.RemoveKPI(m_Feeder.kpiStrings[i]);
             }
         }
-
         EditorGUILayout.EndVertical();
-
         // Draw the public variables in the gameobject of interest.
         for (int i = 0; i < m_Feeder.gameObjects.Count; i++)
         {
-            try
-            {
-                GUI.color = Color.yellow;
-                var go = m_Feeder.gameObjects[i];
-                if (go == null)
-                    continue;
+            GUI.color = Color.yellow;
+            var go = m_Feeder.gameObjects[i];
+            if (go == null)
+                continue;
 
-                m_Object = new SerializedObject(go);
-                m_Property = m_Object.GetIterator();
-                EditorGUILayout.BeginVertical("box");
-                var foundProp = false;
-                while (m_Property.Next(true))
+            m_Object = new SerializedObject(go);
+            m_Property = m_Object.GetIterator();
+            EditorGUILayout.BeginVertical("box");
+            var foundProp = false;
+            while (m_Property.Next(true))
+            {
+                if (m_Property.propertyType.Equals(SerializedPropertyType.ObjectReference))
                 {
-                    if (m_Property.propertyType.Equals(SerializedPropertyType.ObjectReference))
+                    var refVal = m_Property.objectReferenceValue;
+                    if (refVal is MonoBehaviour)
                     {
-                        var refVal = m_Property.objectReferenceValue;
-                        if (refVal is MonoBehaviour)
+                        var path = m_Property.objectReferenceValue.ToString();
+                        if (!path.Contains("UI."))
                         {
-                            var path = m_Property.objectReferenceValue.ToString();
-                            if (!path.Contains("UI."))
+                            var props = new SerializedObject(m_Property.objectReferenceValue).GetIterator();
+                            while (props.NextVisible(true))
                             {
-                                var props = new SerializedObject(m_Property.objectReferenceValue).GetIterator();
-                                while (props.NextVisible(true))
+                                var propType = props.propertyType;
+                                if (!propType.Equals(SerializedPropertyType.ObjectReference))
                                 {
-                                    var propType = props.propertyType;
-                                    if (!propType.Equals(SerializedPropertyType.ObjectReference))
+                                    if (propType.Equals(SerializedPropertyType.Integer) || propType.Equals(SerializedPropertyType.Float))
                                     {
-                                        if (propType.Equals(SerializedPropertyType.Integer) || propType.Equals(SerializedPropertyType.Float))
+                                        foundProp = true;
+                                        var str = path + ":" + props.name + "." + go.GetHashCode();
+                                        if (!m_Feeder.kpiStrings.Contains(str))
                                         {
-                                            foundProp = true;
-                                            var str = path + ":" + props.name + "." + go.GetHashCode();
-                                            if (!m_Feeder.kpiStrings.Contains(str))
+                                            GUI.color = Color.cyan;
+                                            if (GUILayout.Button(props.displayName))
                                             {
-                                                GUI.color = Color.cyan;
-                                                if (GUILayout.Button(props.displayName))
-                                                {
-                                                    m_Feeder.AddKPI(str, props.displayName, propType.ToString());
-                                                }
+                                                m_Feeder.AddKPI(str, props.displayName, propType.ToString());
                                             }
                                         }
                                     }
-                                    else
-                                    {
-                                        GUI.color = Color.white;
-                                        EditorGUILayout.PropertyField(props);
-                                    }
                                 }
-                                props.Reset();
+                                else
+                                {
+                                    GUI.color = Color.white;
+                                    EditorGUILayout.PropertyField(props);
+                                }
                             }
-
+                            props.Reset();
                         }
+
                     }
                 }
-                if (!foundProp)
-                {
-                    EditorGUILayout.LabelField("Nothing chartable found in " + go.name);
-                }
-                EditorGUILayout.EndVertical();
-
-                m_Property.Reset();
-
-                // Apply the property, handle undo
-                m_Object.ApplyModifiedProperties();
             }
-            catch (System.ArgumentException e)
+            if (!foundProp)
             {
-                Debug.LogWarning("Ignoring ArgumentException catched in inspector editor: " + e.Message);
+                EditorGUILayout.LabelField("Nothing chartable found in " + go.name);
             }
+            EditorGUILayout.EndVertical();
+
+            m_Property.Reset();
+
+            // Apply the property, handle undo
+            m_Object.ApplyModifiedProperties();
         }
+
+
+
     }
 }

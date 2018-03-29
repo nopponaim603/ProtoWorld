@@ -17,6 +17,7 @@
 *.RTF	 diff=astextplain
 *.psd filter=lfs diff=lfs merge=lfs -text
 *.unity filter=lfs diff=lfs merge=unityyamlmerge -text
+*.prefab filter=lfs diff=lfs merge=unityyamlmerge -text
 *.FBX filter=lfs diff=lfs merge=lfs -text
 *.fbx filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
@@ -26,21 +27,9 @@
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.tif filter=lfs diff=lfs merge=lfs -text
 *.bmp filter=lfs diff=lfs merge=lfs -text
+*.mat filter=lfs diff=lfs merge=lfs -text
+*.fcd filter=lfs diff=lfs merge=lfs -text
+*.xml filter=lfs diff=lfs merge=lfs -text
 
-# Special files
-ProtoWorldUnityProject/Assets/StreamingAssets/SQLiteDB/trajectoriesDB filter=lfs diff=lfs merge=lfs -text
-ScriptsAndTools/TestFiles/TrafficGenTest/LiveTest/map.trips.xml filter=lfs diff=lfs merge=lfs -text
-ScriptsAndTools/TestFiles/TrafficGenTest/FCDTest/fcdtest.fcd filter=lfs diff=lfs merge=lfs -text
-
-# TU Delft Scene
-ProtoWorldUnityProject/Assets/Miscelanea/Tests/DelftTest/Delft/NavMesh.asset filter=lfs diff=lfs merge=lfs -text
-ScriptsAndTools/TestFiles/DelftTest/FCD/tudelft.fcd filter=lfs diff=lfs merge=lfs -text
-ScriptsAndTools/TestFiles/DelftTest/PWS/*.pws filter=lfs diff=lfs merge=lfs -text
-ScriptsAndTools/TestFiles/DelftTest/Sumo/*.xml filter=lfs diff=lfs merge=lfs -text
-
-# Rome Scene
-ProtoWorldUnityProject/Assets/Cases[[:space:]]ProtoWorld/Rome[[:space:]]Case/Rome[[:space:]]Case[[:space:]]v2.0/NavMesh.asset filter=lfs diff=lfs merge=lfs -text
-ScriptsAndTools/SumoFiles/Rome/*.xml filter=lfs diff=lfs merge=lfs -text
-
-# Haifa Scene
-ProtoWorldUnityProject/Assets/Cases[[:space:]]ProtoWorld/Haifa[[:space:]]Case/Haifa[[:space:]]Case[[:space:]]v2.0/NavMesh.asset filter=lfs diff=lfs merge=lfs -text
+#Special files
+Assets/StreamingAssets/SQLiteDB/trajectoriesDB filter=lfs diff=lfs merge=lfs -text

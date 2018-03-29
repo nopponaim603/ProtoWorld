@@ -21,7 +21,6 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
  */
 
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 /// <summary>
@@ -83,16 +82,6 @@ public class TimeController : MonoBehaviour
     private bool requestPause = false;
     private bool requestedPauseState = false;
 
-    // Parameters for the speed
-    public UnityEngine.UI.Text speedLabel;
-
-    public UnityEngine.UI.RawImage playPauseIcon;
-
-    // Icons
-    public Texture icon_play;
-    public Texture icon_pause;
-
-
     /// <summary>
     /// Awakes the script.
     /// </summary>
@@ -133,30 +122,6 @@ public class TimeController : MonoBehaviour
         }
 
         Time.timeScale = timeVelocity;
-    }
-
-    public string gameTimeToTimeStamp(float time)
-    {
-        int hours = 0;
-        int minutes = 0;
-        int seconds = 0;
-
-        hours = Mathf.FloorToInt(time / 3600F);
-        minutes = Mathf.FloorToInt(time / 60F - hours * 60);
-        seconds = Mathf.FloorToInt(time % 60);
-
-        return string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
-    }
-
-    public float TimeStampToGameTime(string timeStamp)
-    {
-        string[] timeStampSplitted = timeStamp.Split(':');
-
-        float hours = (float.Parse(timeStampSplitted[0]) / 3600F);
-        float minutes = (float.Parse(timeStampSplitted[1]) / 60F - hours * 60);
-        float seconds = (float.Parse(timeStampSplitted[2]) % 60);
-
-        return hours + minutes + seconds;
     }
 
     /// <summary>
@@ -204,9 +169,7 @@ public class TimeController : MonoBehaviour
             timerText.text += " [" + Mathf.FloorToInt(gameTime) + "]";
 
         // Show the velocity factor in the textbox
-        //timerText.text += " (x" + timeVelocity.ToString() + ")";
-
-        if(speedLabel != null)        speedLabel.text = timeVelocity.ToString();
+        timerText.text += " (x" + timeVelocity.ToString() + ")";
 
         //text.text = "Time Velocity: x" + timeVelocity.ToString() + "\n Current Time: " + string.Format("{0:0000}", Time.time);
 
@@ -316,9 +279,8 @@ public class TimeController : MonoBehaviour
             if (loggerAssembly != null && loggerAssembly.logTimeController)
                 log.Info(string.Format("{0}:{1}:{2}:{3}", logSeriesId, "action", 0, "game paused"));
 
-            if (pauseButtonLabel != null && icon_play != null)
-                playPauseIcon.texture = icon_play;
-                //pauseButtonLabel.text = "Resume";
+            if (pauseButtonLabel != null)
+                pauseButtonLabel.text = "Resume";
         }
         else
         {
@@ -327,9 +289,8 @@ public class TimeController : MonoBehaviour
             if (loggerAssembly != null && loggerAssembly.logTimeController)
                 log.Info(string.Format("{0}:{1}:{2}:{3}", logSeriesId, "action", 0, "game resumed"));
 
-            if (pauseButtonLabel != null && icon_pause != null)
-                playPauseIcon.texture = icon_pause;
-                //pauseButtonLabel.text = "Pause";
+            if (pauseButtonLabel != null)
+                pauseButtonLabel.text = "Pause";
         }
     }
 

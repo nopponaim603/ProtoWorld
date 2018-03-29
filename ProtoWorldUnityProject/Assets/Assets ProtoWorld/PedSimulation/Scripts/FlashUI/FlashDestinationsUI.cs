@@ -21,7 +21,6 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
  */
 
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 public class FlashDestinationsUI : MonoBehaviour
@@ -33,18 +32,16 @@ public class FlashDestinationsUI : MonoBehaviour
     FlashPedestriansDestination[] destinations;
     public GameObject destinationSlider;
 
-    private ScrollRect scrollview;
-
     void Awake()
     {
         destCanvas = this.GetComponent<RectTransform>();
         destinations = FindObjectsOfType<FlashPedestriansDestination>();
-        scrollview = GameObject.Find("FlashDestinationScrollView").GetComponent<ScrollRect>();
+
         // Adapt the size of the panel
         if (useHackForDriebergen)
             destCanvas.sizeDelta = new Vector2(destCanvas.sizeDelta.x, destCanvas.sizeDelta.y + destCanvas.sizeDelta.y * 3);
-        //else
-            //destCanvas.sizeDelta = new Vector2(destCanvas.sizeDelta.x, destCanvas.sizeDelta.y + destCanvas.sizeDelta.y * destinations.Length);
+        else
+            destCanvas.sizeDelta = new Vector2(destCanvas.sizeDelta.x, destCanvas.sizeDelta.y + destCanvas.sizeDelta.y * destinations.Length);
 
         int elemCounter = 0;
 
@@ -58,13 +55,13 @@ public class FlashDestinationsUI : MonoBehaviour
 
                 // Get the needed components of the slider object
                 RectTransform canvasBox = destinationPrioritySlider.GetComponent<RectTransform>();
-                UnityEngine.UI.Text destinationText = destinationPrioritySlider.transform.FindChild("DestinationText").GetComponent<UnityEngine.UI.Text>();
-                UnityEngine.UI.Slider slider = destinationPrioritySlider.transform.FindChild("Slider").GetComponent<UnityEngine.UI.Slider>();
-                FlashDestinationSliderController sliderscript = destinationPrioritySlider.transform.FindChild("Slider").GetComponent<FlashDestinationSliderController>();
+                UnityEngine.UI.Text destinationText = destinationPrioritySlider.transform.Find("DestinationText").GetComponent<UnityEngine.UI.Text>();
+                UnityEngine.UI.Slider slider = destinationPrioritySlider.transform.Find("Slider").GetComponent<UnityEngine.UI.Slider>();
+                FlashDestinationSliderController sliderscript = destinationPrioritySlider.transform.Find("Slider").GetComponent<FlashDestinationSliderController>();
 
                 // Position the slider according to its parent object
-                destinationPrioritySlider.transform.SetParent(scrollview.content, false);
-                //canvasBox.localPosition = new Vector3(0, -canvasBox.sizeDelta.y * (elemCounter + 1), 0);
+                destinationPrioritySlider.transform.SetParent(this.transform, false);
+                canvasBox.localPosition = new Vector3(0, -canvasBox.sizeDelta.y * (elemCounter + 1), 0);
 
                 // Change the destination text
                 destinationText.text = destinations[i].destinationName;
@@ -83,4 +80,3 @@ public class FlashDestinationsUI : MonoBehaviour
         }
     }
 }
-  
