@@ -78,12 +78,15 @@ public class TrafficIntegrationController : MonoBehaviour
     // Properties for playing/pausing the traffic simulation in game
     public bool simulationPaused = false;
 
+    //Property for the heatmap layer
+    public bool visualizeTrafficInHeatmap = false;
+
     /// <summary>
     /// Awakes the script and reads the configuration file (if any).
     /// </summary>
     void Awake()
     {
-        string path = Application.dataPath + "/confTraffic.cfg";
+        string path = Application.streamingAssetsPath + "/confTraffic.cfg";
         //Debug.Log("This is the path of the traffic config file: " + path);
 
         //Use the confTraffic.cgf in order to make the project portable
