@@ -30,12 +30,12 @@ public class ClosestBikeStation : MonoBehaviour {
 
 	//the navAgent mesh
 	[HideInInspector]
-	public NavMeshAgent navAgent;
+	public UnityEngine.AI.NavMeshAgent navAgent;
 
 	//The different positions that are used
 	public Vector3 closestBikeStationPos;
 	public Vector3 currentBikeStationPos;
-	private Vector3 nulVector = Vector3.zero;
+	private Vector3 nulVector;
 
 	//Some used variables
 	public bool bikeStationReached = false;
@@ -63,7 +63,7 @@ public class ClosestBikeStation : MonoBehaviour {
 	/// </summary>
 	void Awake()
 	{
-		navAgent = gameObject.GetComponent<NavMeshAgent>();
+		navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 	}
 
 	// Use this for initialization
@@ -183,7 +183,7 @@ public class ClosestBikeStation : MonoBehaviour {
 				animator.SetBool("bikeStationReached", true);
 				if(bikeAcquired == true){
 				//if bike has been aqcuired activate it
-				this.transform.FindChild("bike").gameObject.SetActive(true);
+				this.transform.Find("bike").gameObject.SetActive(true);
 				this.gameObject.GetComponent<PedestrianKTHSteering>().navAgent.speed = this.gameObject.GetComponent<PedestrianKTHSteering>().speedInBike + Random.Range(-0.5f, this.gameObject.GetComponent<PedestrianKTHSteering>().speedVariation);
 				}
 				//set mode to originalmode

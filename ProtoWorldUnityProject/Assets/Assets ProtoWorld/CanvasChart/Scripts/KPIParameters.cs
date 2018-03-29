@@ -30,8 +30,6 @@ public class KPIParameters : MonoBehaviour
     public bool showQueuing;
     public bool showVehicles;
 
-    public static bool pauseKPIS = false;
-
     void Awake()
     {
         DontDestroyOnLoad(gameObject);

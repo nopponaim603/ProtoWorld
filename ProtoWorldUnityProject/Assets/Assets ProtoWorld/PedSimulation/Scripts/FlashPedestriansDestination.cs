@@ -12,24 +12,22 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-/*
-* 
-* FLASH PEDESTRIAN SIMULATOR
-* FlashPedestriansDestination.cs
-* Miguel Ramos Carretero
-* 
-*/
+﻿/*
+ * 
+ * FLASH PEDESTRIAN SIMULATOR
+ * FlashPedestriansDestination.cs
+ * Miguel Ramos Carretero
+ * 
+ */
 
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System;
 
 /// <summary>
 /// Class that defines a destination entry for Flash Pedestrians (composed of a transform, 
 /// a float priority and a array of colliders representing the stations nearby). 
 /// </summary>
-public class FlashPedestriansDestination : MonoBehaviour, Loggable
+public class FlashPedestriansDestination : MonoBehaviour
 {
     public string destinationName;
 
@@ -49,12 +47,6 @@ public class FlashPedestriansDestination : MonoBehaviour, Loggable
 
     void Awake()
     {
-        initializeDestination();
-		LoggableManager.subscribe(this);
-    }
-
-    public void initializeDestination()
-    {
         destinationTransform = this.transform;
 
         FlashPedestriansGlobalParameters pedGlobalParameters = GetComponent<FlashPedestriansGlobalParameters>();
@@ -63,59 +55,6 @@ public class FlashPedestriansDestination : MonoBehaviour, Loggable
         stationsNearThisDestination = Physics.OverlapSphere(destinationTransform.position, radiousToCheckStations, 1 << LayerMask.NameToLayer("Stations"));
 
         //Debug.Log(this.gameObject.name + " has found " + stationsNearThisDestination.Length 
-        //+ " stations nearby");
+            //+ " stations nearby");
     }
-
-	public LogDataTree getLogData(){
-		LogDataTree logData = new LogDataTree (tag,null);
-		logData.AddChild(new LogDataTree("Name",destinationName));
-		logData.AddChild(new LogDataTree("PositionX",destinationTransform.position.x.ToString()));
-		logData.AddChild(new LogDataTree("PositionY",destinationTransform.position.y.ToString()));
-		logData.AddChild(new LogDataTree("PositionZ",destinationTransform.position.z.ToString()));
-		logData.AddChild(new LogDataTree("CheckRadius",radiousToCheckStations.ToString()));
-		logData.AddChild(new LogDataTree("Priority",destinationPriority.ToString()));
-		return logData;
-	}
-
-	public void rebuildFromLog(LogDataTree logData){
-		GameObject flashDestinationObject = null;
-        FlashPedestriansDestination flashDestinationScript = new FlashPedestriansDestination();
-        foreach (Loggable destination in LoggableManager.getCurrentSubscribedLoggables())
-        {
-            if (destination == null)
-                continue;
-
-            if (((MonoBehaviour)destination).gameObject.tag == "PedestrianDestination")
-            {
-                //get the destination that needs to be altered and modify it.
-                flashDestinationScript.destinationName = logData.GetChild("Name").Value;
-                if (((MonoBehaviour)destination).GetComponent<FlashPedestriansDestination>().destinationName == flashDestinationScript.destinationName)
-                {
-                    flashDestinationObject = ((MonoBehaviour)destination).gameObject;
-                    flashDestinationScript = flashDestinationObject.GetComponent<FlashPedestriansDestination>();
-
-                    Vector3 position = new Vector3();
-                    position.x = float.Parse(logData.GetChild("PositionX").Value);
-                    position.y = float.Parse(logData.GetChild("PositionY").Value);
-                    position.z = float.Parse(logData.GetChild("PositionZ").Value);
-                    flashDestinationScript.radiousToCheckStations = float.Parse(logData.GetChild("CheckRadius").Value);
-                    flashDestinationScript.destinationPriority = float.Parse(logData.GetChild("Priority").Value);
-                    flashDestinationObject.name = "FlashDestination";
-                    flashDestinationScript.destinationTransform.position = position;
-
-                    flashDestinationScript.initializeDestination();
-                    flashDestinationScript.enabled = true;
-                }
-            }
-        }
-    }
-
-	public  LogPriorities getPriorityLevel()
-	{
-		return LogPriorities.High;
-	}
-
-	public bool destroyOnLogLoad(){
-		return false;
-	}
 }

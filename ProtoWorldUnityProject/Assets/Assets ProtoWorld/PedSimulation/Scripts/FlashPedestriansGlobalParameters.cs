@@ -22,7 +22,6 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 /// <summary>
 /// Definition of the global parameters for the Flash Pedestrian Simulator. 
@@ -34,8 +33,6 @@ public class FlashPedestriansGlobalParameters : MonoBehaviour
     /// </summary>
     [Range(0.0f, 1.0f)]
     public float percOfItalianSpeakers = 0.5f;
-
-    public static int nextSpawnerId = 0;
 
     /// <summary>
     /// Percentage of English speakers. 
@@ -94,8 +91,6 @@ public class FlashPedestriansGlobalParameters : MonoBehaviour
     /// </summary>
     public bool bikesEnabled = true;
 
-    public static long travelerId = 0;
-
     /// <summary>
     /// Percentage of pedestrians willing to take a bike. 
     /// </summary>
@@ -128,8 +123,8 @@ public class FlashPedestriansGlobalParameters : MonoBehaviour
     /// </summary>
     void Start()
     {
-        NavMesh.avoidancePredictionTime = 0.1f;
-        NavMesh.pathfindingIterationsPerFrame = 1000;
+        UnityEngine.AI.NavMesh.avoidancePredictionTime = 0.1f;
+        UnityEngine.AI.NavMesh.pathfindingIterationsPerFrame = 1000;
     }
 
     /// <summary>

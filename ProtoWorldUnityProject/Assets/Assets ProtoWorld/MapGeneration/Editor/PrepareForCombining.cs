@@ -17,7 +17,7 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
  * GAPSLABS EXTENDED EDITOR
  * Aram Azhari
  * 
- * Reviewed by Miguel Ramos Carretero, Berend Wouda
+ * Reviewed by Miguel Ramos Carretero
  * 
  */
 
@@ -33,7 +33,7 @@ public class PrepareForCombining : Editor
     /// MENU ITEMS FOR OPTIMIZING ELEMENTS 
     /// -----------------------------------------------------------------------
 
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Group Close Buildings")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Group Close Buildings")]
     public static void PrepareForCombiningBuildings()
     {
         TurnBuildingCollidersOff();
@@ -42,7 +42,7 @@ public class PrepareForCombining : Editor
         TurnBuildingCollidersOn();
     }
 
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Group Close Roads")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Group Close Roads")]
     public static void PrepareForCombiningRoads()
     {
         TurnRoadCollidersOff();
@@ -54,7 +54,7 @@ public class PrepareForCombining : Editor
     /// <summary>
     /// Turns off the colliders for objects with tag "Building".
     /// </summary>
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Turn Colliders Off (Buildings)")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Turn Colliders off (Buildings)")]
     public static void TurnBuildingCollidersOff()
     {
         var go = GameObject.FindGameObjectsWithTag("Building");
@@ -70,7 +70,7 @@ public class PrepareForCombining : Editor
     /// <summary>
     /// Turns on the colliders for objects with tag "Building".
     /// </summary>
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Turn Colliders On (Buildings)")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Turn Colliders on (Buildings)")]
     public static void TurnBuildingCollidersOn()
     {
         var go = GameObject.FindGameObjectsWithTag("Building");
@@ -86,7 +86,7 @@ public class PrepareForCombining : Editor
     /// <summary>
     /// Turns off the colliders for objects with tag "Line".
     /// </summary>
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Turn Colliders Off (Roads)")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Turn Colliders off (Roads)")]
     public static void TurnRoadCollidersOff()
     {
         var go = GameObject.FindGameObjectsWithTag("Line");
@@ -103,7 +103,7 @@ public class PrepareForCombining : Editor
     /// <summary>
     /// Turns on the colliders for objects with tags "Line".
     /// </summary>
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Turn Colliders On (Roads)")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Turn Colliders on (Roads)")]
     public static void TurnRoadCollidersOn()
     {
         var go = GameObject.FindGameObjectsWithTag("Line");
@@ -119,7 +119,7 @@ public class PrepareForCombining : Editor
     /// <summary>
     /// Removes all the colliders of the objects with Building tag. Note that without the colliders, users will not be able to click on the buildings to get more information.
     /// </summary>
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Remove Building Colliders")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Remove Building Colliders")]
     static void RemoveBuildingsColliders()
     {
         var go2 = GameObject.FindGameObjectsWithTag("Building");
@@ -138,13 +138,13 @@ public class PrepareForCombining : Editor
     /// <summary>
     /// Removes all the colliders of the objects with Line tag. Note that without the colliders, pedestrians in SiPS will not be able to interact with the roads.
     /// </summary>
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Remove Road Colliders")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Remove Road Colliders")]
     static void RemoveRoadsColliders()
     {
         var go2 = GameObject.FindGameObjectsWithTag("Line");
         for (int i = 0; i < go2.Length; i++)
         {
-            if (!EditorUtility.DisplayCancelableProgressBar("Removing Colliders - Roads", "", i / (float)(go2.Length)))
+            if (!EditorUtility.DisplayCancelableProgressBar("Removing Colliders - Buildings", "", i / (float)(go2.Length)))
             {
                 if (go2[i].GetComponent<Polygon>() != null)
                     DestroyImmediate(go2[i].GetComponent<Polygon>());
@@ -158,7 +158,7 @@ public class PrepareForCombining : Editor
     /// MENU ITEMS DEPRECATED
     /// -----------------------------------------------------------------------
 
-    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Convert colliders to triggers")]
+    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Convert colliders to triggers")]
     static void ConvertLinesToColliderAsTrigger()
     {
         var go2 = GameObject.FindGameObjectsWithTag("Line");
@@ -182,13 +182,13 @@ public class PrepareForCombining : Editor
         EditorUtility.ClearProgressBar();
     }
 
-    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Change Selected object height")]
+    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Change Selected object height")]
     static void DecreaseHeight()
     {
         Selection.activeTransform.position = Selection.activeTransform.position + new Vector3(0, -0.3f, 0);
     }
 
-    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Show vertices #&v")]
+    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Show vertices #&v")]
     static void ShowVertices()
     {
         if (Selection.activeTransform.childCount == 0)
@@ -211,7 +211,7 @@ public class PrepareForCombining : Editor
         }
     }
 
-    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Convert Building colliders to triggers")]
+    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Convert Building colliders to triggers")]
     static void ConvertBuildingsToColliderAsTrigger()
     {
         var go2 = GameObject.FindGameObjectsWithTag("Building");
@@ -226,7 +226,7 @@ public class PrepareForCombining : Editor
         EditorUtility.ClearProgressBar();
     }
 
-    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Combine Close Roads")]
+    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Combine Close Roads")]
     static void PrepareForRoadCombine()
     {
         TurnRoadCollidersOff();
@@ -323,41 +323,30 @@ public class PrepareForCombining : Editor
         var mapProperties = aramGisObject.GetComponent<MapBoundaries>();
         var parentObject = GameObject.Find(ObjectGroup);
         CombineChildren[] combinations = null;
-		try {
-			if(autoTurnOffColliders) {
-				TurnRoadCollidersOff();
-				TurnBuildingCollidersOff();
-			}
+        try
+        {
+            if (autoTurnOffColliders)
+            {
+                TurnRoadCollidersOff();
+                TurnBuildingCollidersOff();
+            }
 
-			if(parentObject == null) {
-				Debug.LogError("Why is " + ObjectGroup + " object null?");
-				return;
-			}
+            if (parentObject == null)
+            {
+                Debug.LogError("Why is " + ObjectGroup + " object null?");
+                return;
+            }
 
-			combinations = parentObject.GetComponentsInChildren<CombineChildren>();
-			for(int i = 0; i < combinations.Length; i++) {
-				if(!EditorUtility.DisplayCancelableProgressBar("MeshCombineUtility running... ", "Combining meshes of " + combinations[i].name, 100f * i / combinations.Length)) {
-					combinations[i].generateTriangleStrips = false;
-					combinations[i].CombinedMeshName = "Combined_" + childTag + "_mesh";
-					combinations[i].CombinedMeshTag = "Combined" + ObjectGroup;
-					combinations[i].SendMessage("Start");
-
-					// TODO Disabled since it doesn't work. The combiner doesn't run and finish
-					// before this code is called. For now we can use the post generation utility.
-
-					// Set the layer to the layer the first matching child is in, which is likely
-					// to be the layer all the children are in, since their materials are the same.
-					//GameObject combinedChild = GameObject.Find(combinations[i].CombinedMeshName);
-					//for(int index = 0; index < combinations[i].transform.childCount; index++) {
-					//	GameObject child = combinations[i].transform.GetChild(index).gameObject;
-					//	if(child.tag != combinations[i].CombinedMeshTag) {
-					//		if(child.GetComponent<Renderer>().sharedMaterial.name == combinedChild.GetComponent<Renderer>().sharedMaterial.name) {
-					//			combinedChild.layer = child.layer;
-					//			break;
-					//		}
-					//	}
-					//}
-				}
+            combinations = parentObject.GetComponentsInChildren<CombineChildren>();
+            for (int i = 0; i < combinations.Length; i++)
+            {
+                if (!EditorUtility.DisplayCancelableProgressBar("MeshCombineUtility running... ", "Combining meshes of " + combinations[i].name, 100f * i / combinations.Length))
+                {
+                    combinations[i].generateTriangleStrips = false;
+                    combinations[i].CombinedMeshName = "Combined_" + childTag + "_mesh";
+                    combinations[i].CombinedMeshTag = "Combined" + ObjectGroup;
+                    combinations[i].SendMessage("Start");
+                }
                 else break;
             }
         }

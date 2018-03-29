@@ -57,12 +57,6 @@ public class TrafficIntegrationVehicle : MonoBehaviour
     private bool braked = false;
     private float brakingCountdown = 0.0f;
     private float currentAngle = float.MaxValue;
-	
-	/// <summary>
-	/// Note that the heatmap is initialized by the spawner to improve performance.
-	/// </summary>
-	[HideInInspector]
-	public Heatmap heatMap;
 
     /// <summary>
     /// Initializes the fields when the script starts. 
@@ -79,12 +73,7 @@ public class TrafficIntegrationVehicle : MonoBehaviour
         fractionCovered = 1.0f;
         startTime = -1.0f;
         speed = 1.5f;
-    
-		if (heatMap != null)
-		{
-			heatMap.putInArray(this.transform.position.x, this.transform.position.y, this.transform.position.z, this.transform, 2);
-		}
-	}
+    }
 
     /// <summary>
     /// Updates smoothly the position of the vehicle and controls the braking in case there 
@@ -187,7 +176,7 @@ public class TrafficIntegrationVehicle : MonoBehaviour
         transform.position = newPosition;
 
         //Fix the rotation
-        //Note: There are no conventions for angles between different 
+        //Note: There are not conventions for angles between different 
         //simulations, so car rotations may appear wrong in the simulation. 
         //If that is the case, fix it in the following lines:
         transform.rotation = Quaternion.Euler(0, 90.0f, 0);

@@ -13,25 +13,22 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 */
 
 /*
-* 
-* FLASH PEDESTRIAN SIMULATOR
-* FlashPedestriansController.cs
-* Miguel Ramos Carretero
-* Johnson Ho
-* 
-*/
+ * 
+ * FLASH PEDESTRIAN SIMULATOR
+ * FlashPedestriansController.cs
+ * Miguel Ramos Carretero
+ * Johnson Ho
+ * 
+ */
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using System;
 
-public class FlashPedestriansController : TravelerController, Loggable
+public class FlashPedestriansController : TravelerController
 {
     public int uniqueId;
-
-    public int spawnerId;
 
     public FlashPedestriansProfile profile;
 
@@ -44,7 +41,7 @@ public class FlashPedestriansController : TravelerController, Loggable
     public float radiousToCheckStations = 1000;
 
     [HideInInspector]
-    public NavMeshAgent navAgent;
+    public UnityEngine.AI.NavMeshAgent navAgent;
 
     [HideInInspector]
     public FlashPedestriansInformer flashInformer;
@@ -72,8 +69,7 @@ public class FlashPedestriansController : TravelerController, Loggable
 
     private int stopIndex;
 
-    [HideInInspector]
-    public FlashPedestriansGlobalParameters globalParam;
+    private FlashPedestriansGlobalParameters globalParam;
 
     public Material materialForRumourCaught;
 
@@ -88,33 +84,14 @@ public class FlashPedestriansController : TravelerController, Loggable
     private bool isPause = false;
 
     /// <summary>
-    /// Reusing the WaitForSeconds globally since it saves a lot of allocation and deallocation.
-    /// This causes the garbage collector to run less often.
-    /// </summary>
-    private static WaitForSeconds waitForZoom = new WaitForSeconds(0.5f);
-
-    /// <summary>
-    /// Note that the heatmap is initialized by the spawner to improve performance.
-    /// </summary>
-    [HideInInspector]
-    public Heatmap heatMap;
-
-
-    /// <summary>
     /// Awake method.
     /// </summary>
     void Awake()
     {
-        initializePedestrian();
-        LoggableManager.subscribe((Loggable)this);
-    }
-
-    public void initializePedestrian()
-    {
-        navAgent = gameObject.GetComponent<NavMeshAgent>();
+        globalParam = FindObjectOfType<FlashPedestriansGlobalParameters>();
+        navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
         FSM = gameObject.GetComponent<Animator>();
         balloons = transform.Find("Balloons");
-        travelerId = FlashPedestriansGlobalParameters.travelerId++;
     }
 
     /// <summary>
@@ -124,42 +101,18 @@ public class FlashPedestriansController : TravelerController, Loggable
     {
         ResetStopIndex();
         navAgent.speed = profile.speed;
-        navAgent.radius = 0.75f + UnityEngine.Random.Range(-0.25f, 0.25f); //Randomize "personal space"
+        navAgent.radius = 0.75f + Random.Range(-0.25f, 0.25f); //Randomize "personal space"
 
         if (routing != null)
             if (routing.itinerary != null)
                 stations = routing.itinerary.WayPoints;
 
         // Calculate the road mask (used if car awareness is active)
-        roadMask = 1 << NavMesh.GetAreaFromName("vehicle road") | 1 << NavMesh.GetAreaFromName("residential") | 1 << NavMesh.GetAreaFromName("service") | 1 << NavMesh.GetAreaFromName("crosswalk");
+        roadMask = 1 << UnityEngine.AI.NavMesh.GetAreaFromName("vehicle road") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("residential") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("service") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("crosswalk");
 
         UpdateInfoBalloon();
 
         currentWeather = FlashPedestriansGlobalParameters.WeatherConditions.DefaultWeather;
-
-        // Needed to put info about object into heatmaps array
-        if (heatMap != null)
-        {
-            heatMap.putInArray(this.transform.position.x, this.transform.position.y, this.transform.position.z, this.transform, 1);
-        }
-
-        Renderer rsp = GetComponentInParent<Renderer>();
-        // Deactivate render if zoomed out
-        if (rsp.enabled != true)
-        {
-            StartCoroutine(LateStart());
-        }
-
-    }
-
-    IEnumerator LateStart()
-    {
-        yield return waitForZoom;
-
-        Renderer[] rs = GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-            r.enabled = false;
-
     }
 
     /// <summary>
@@ -232,7 +185,6 @@ public class FlashPedestriansController : TravelerController, Loggable
                 // Arrives at the destination
                 goingBikingToDestination = false;
                 FSM.SetBool("OnDestination", true);
-                FSM.SetBool("Biking", false);
             }
 
             // If car awareness is active and pedestrian is walking or cycling, check if it is on a road
@@ -240,7 +192,7 @@ public class FlashPedestriansController : TravelerController, Loggable
             {
                 if (carAwarenessTimer > carAwarenessFrequency)
                 {
-                    NavMeshHit navHit;
+                    UnityEngine.AI.NavMeshHit navHit;
                     if (navAgent.enabled && navAgent.hasPath && !navAgent.SamplePathPosition(-1, 2.0f, out navHit))
                     {
                         if ((navHit.mask & roadMask) != 0)
@@ -310,7 +262,7 @@ public class FlashPedestriansController : TravelerController, Loggable
         profile.speed += 3;
         navAgent.speed = profile.speed;
 
-        Transform bike = this.transform.FindChild("bike");
+        Transform bike = this.transform.Find("bike");
         if (bike != null)
             bike.gameObject.SetActive(true);
 
@@ -452,7 +404,7 @@ public class FlashPedestriansController : TravelerController, Loggable
     /// Finds the stations near the current position of the pedestrian.
     /// </summary>
     /// <returns>List of stations nearby.</returns>
-    public StationController[] StationsNearCurrentPosition()
+    private StationController[] StationsNearCurrentPosition()
     {
         // Get the stations that are around the spawner
         Collider[] coll = Physics.OverlapSphere(this.transform.position, radiousToCheckStations, 1 << LayerMask.NameToLayer("Stations"));
@@ -536,27 +488,13 @@ public class FlashPedestriansController : TravelerController, Loggable
         this.gameObject.GetComponentInParent<FlashPedestriansSpawner>().numberOfPedestriansOnDestination++;
         flashInformer.UnsuscribePedestrian(this);
 
-        Transform bike = this.transform.FindChild("bike");
+        Transform bike = this.transform.Find("bike");
         if (bike != null)
-        {
-            if (bike.gameObject.activeSelf)
-            {
-                //remove cyclist from total
-                GameObject TransportationModule = GameObject.Find("TransportationModule");
-                KPIPassengersPerType kpipassengers = TransportationModule.GetComponent<KPIPassengersPerType>();
-                kpipassengers.bicycleCounter--;
-            }
             bike.gameObject.SetActive(false);
-            FSM.SetBool("OnDestination", true);
-            FSM.SetBool("Biking", false);
-        }
 
-        if (globalParam != null)
-        {
-            // Atomic operations for the KPI properties
-            Interlocked.Increment(ref globalParam.numberOfPedestrianReachingDestination);
-            Interlocked.Decrement(ref globalParam.numberOfPedestriansOnScenario);
-        }
+        // Atomic operations for the KPI properties
+        Interlocked.Increment(ref globalParam.numberOfPedestrianReachingDestination);
+        Interlocked.Decrement(ref globalParam.numberOfPedestriansOnScenario);
 
         this.gameObject.SetActive(false);
     }
@@ -774,158 +712,5 @@ public class FlashPedestriansController : TravelerController, Loggable
         }
 
         currentWeather = newWeatherCondition;
-    }
-
-    public LogDataTree getLogData()
-    {
-        LogDataTree logData = new LogDataTree(tag, null);
-        logData.AddChild(new LogDataTree("ID", uniqueId.ToString()));
-        logData.AddChild(new LogDataTree("SpawnerID", spawnerId.ToString()));
-        logData.AddChild(new LogDataTree("PositionX", transform.position.x.ToString()));
-        logData.AddChild(new LogDataTree("PositionY", transform.position.y.ToString()));
-        logData.AddChild(new LogDataTree("PositionZ", transform.position.z.ToString()));
-        logData.AddChild(new LogDataTree("RadiousToCheckStations", radiousToCheckStations.ToString()));
-        logData.AddChild(new LogDataTree("GoingToDestination", goingToDestination.ToString()));
-        logData.AddChild(new LogDataTree("GoingToStation", goingToStation.ToString()));
-        logData.AddChild(new LogDataTree("TakingABike", takingABike.ToString()));
-        logData.AddChild(new LogDataTree("GoingBikingToDestination", goingBikingToDestination.ToString()));
-        logData.AddChild(new LogDataTree("CarAwarenessTimer", carAwarenessTimer.ToString()));
-        logData.AddChild(new LogDataTree("CarAwarenessFrequency", carAwarenessFrequency.ToString()));
-        logData.AddChild(new LogDataTree("BikeAwarenessTimer", bikeAwarenessTimer.ToString()));
-        logData.AddChild(new LogDataTree("BikeAwarenessFrequency", bikeAwarenessFrequency.ToString()));
-        logData.AddChild(new LogDataTree("RoadMask", roadMask.ToString()));
-        logData.AddChild(new LogDataTree("Embarked", embarked.ToString()));
-        logData.AddChild(new LogDataTree("StopIndex", stopIndex.ToString()));
-        logData.AddChild(new LogDataTree("VisualizeRumoursCaught", visualizeRumoursCaught.ToString()));
-        logData.AddChild(new LogDataTree("BalloonsEnabled", balloonsEnabled.ToString()));
-        logData.AddChild(new LogDataTree("IsPause", isPause.ToString()));
-		logData.AddChild (new LogDataTree ("TravelerId", travelerId.ToString()));
-
-        LogDataTree routingData = new LogDataTree("Routing", null);
-        routingData.AddChild(new LogDataTree("DestinationName", routing.destinationPoint.destinationName));
-        logData.AddChild(routingData);
-
-        if (profile != null)
-        {
-            LogDataTree profileData = new LogDataTree("Profile", null);
-            profileData.AddChild(new LogDataTree("CarAwareness", profile.carAwareness.ToString()));
-            profileData.AddChild(new LogDataTree("ChanceOfBelievingRumours", profile.chanceOfBelievingRumours.ToString()));
-            profileData.AddChild(new LogDataTree("ChanceOfSubscription", profile.chanceOfSubscription.ToString()));
-            profileData.AddChild(new LogDataTree("ChanceOfTakingABike", profile.chanceOfTakingABike.ToString()));
-            profileData.AddChild(new LogDataTree("EnglishSpeaker", profile.englishSpeaker.ToString()));
-            profileData.AddChild(new LogDataTree("ItalianSpeaker", profile.italianSpeaker.ToString()));
-            profileData.AddChild(new LogDataTree("Speed", profile.speed.ToString()));
-            profileData.AddChild(new LogDataTree("WeatherFactorOnTakingBikes", profile.weatherFactorOnTakingBikes.ToString()));
-            profileData.AddChild(new LogDataTree("WillingToChangeDestination", profile.willingToChangeDestination.ToString()));
-            profileData.AddChild(new LogDataTree("TravelPreference", profile.travelPreference.ToString()));
-            logData.AddChild(profileData);
-        }
-        if (nextPoint != null)
-        {
-            logData.AddChild(new LogDataTree("NextPointPositionX", nextPoint.transform.position.x.ToString()));
-            logData.AddChild(new LogDataTree("NextPointPositionY", nextPoint.transform.position.y.ToString()));
-            logData.AddChild(new LogDataTree("NextPointPositionZ", nextPoint.transform.position.z.ToString()));
-        }
-        return logData;
-    }
-
-    public void rebuildFromLog(LogDataTree logData)
-    {
-        GameObject flashPedestrianObject = GameObject.Instantiate(gameObject) as GameObject;
-        FlashPedestriansController flashPedestrianScript = flashPedestrianObject.GetComponent<FlashPedestriansController>();
-        Vector3 position = new Vector3();
-        flashPedestrianScript.uniqueId = int.Parse(logData.GetChild("ID").Value);
-        flashPedestrianScript.spawnerId = int.Parse(logData.GetChild("SpawnerID").Value);
-
-        position.x = float.Parse(logData.GetChild("PositionX").Value);
-        position.y = float.Parse(logData.GetChild("PositionY").Value);
-        position.z = float.Parse(logData.GetChild("PositionZ").Value);
-        flashPedestrianScript.transform.position = position;
-        flashPedestrianObject.transform.position = position;
-
-        flashPedestrianScript.radiousToCheckStations = float.Parse(logData.GetChild("RadiousToCheckStations").Value);
-        flashPedestrianScript.goingToDestination = bool.Parse(logData.GetChild("GoingToDestination").Value);
-        flashPedestrianScript.goingToStation = bool.Parse(logData.GetChild("GoingToStation").Value);
-        flashPedestrianScript.takingABike = bool.Parse(logData.GetChild("TakingABike").Value);
-        flashPedestrianScript.goingBikingToDestination = bool.Parse(logData.GetChild("GoingBikingToDestination").Value);
-
-        flashPedestrianScript.carAwarenessTimer = float.Parse(logData.GetChild("CarAwarenessTimer").Value);
-        flashPedestrianScript.carAwarenessFrequency = float.Parse(logData.GetChild("CarAwarenessFrequency").Value);
-        flashPedestrianScript.bikeAwarenessTimer = float.Parse(logData.GetChild("BikeAwarenessTimer").Value);
-        flashPedestrianScript.bikeAwarenessFrequency = float.Parse(logData.GetChild("BikeAwarenessFrequency").Value);
-
-        flashPedestrianScript.roadMask = int.Parse(logData.GetChild("RoadMask").Value);
-        flashPedestrianScript.embarked = bool.Parse(logData.GetChild("Embarked").Value);
-        flashPedestrianScript.stopIndex = int.Parse(logData.GetChild("StopIndex").Value);
-        flashPedestrianScript.visualizeRumoursCaught = bool.Parse(logData.GetChild("VisualizeRumoursCaught").Value);
-        flashPedestrianScript.balloonsEnabled = bool.Parse(logData.GetChild("BalloonsEnabled").Value);
-        flashPedestrianScript.isPause = bool.Parse(logData.GetChild("IsPause").Value);
-
-		flashPedestrianScript.travelerId = long.Parse (logData.GetChild ("TravelerId").Value);
-
-        if (logData.containsKey("Profile"))
-        {
-            LogDataTree profileData = logData.GetChild("Profile");
-            bool carAwareness = bool.Parse(profileData.GetChild("CarAwareness").Value);
-            float chanceOfBelievingRumours = float.Parse(profileData.GetChild("ChanceOfBelievingRumours").Value);
-            float chanceOfSubscription = float.Parse(profileData.GetChild("ChanceOfSubscription").Value);
-            float chanceOfTakingABike = float.Parse(profileData.GetChild("ChanceOfTakingABike").Value);
-            bool englishSpeaker = bool.Parse(profileData.GetChild("EnglishSpeaker").Value);
-            bool italianSpeaker = bool.Parse(profileData.GetChild("ItalianSpeaker").Value);
-            float speed = float.Parse(profileData.GetChild("Speed").Value);
-            float weatherFactorOnTakingBikes = float.Parse(profileData.GetChild("WeatherFactorOnTakingBikes").Value);
-            bool willingToChangeDestination = bool.Parse(profileData.GetChild("WillingToChangeDestination").Value);
-            TravelPreference travelPreference = (TravelPreference)Enum.Parse(typeof(TravelPreference), profileData.GetChild("TravelPreference").Value.ToString());
-            flashPedestrianScript.profile = new FlashPedestriansProfile(speed, englishSpeaker, italianSpeaker, chanceOfBelievingRumours,
-                willingToChangeDestination, chanceOfTakingABike, chanceOfBelievingRumours, carAwareness, travelPreference);
-        }
-        if (logData.containsKey("NextPointX"))
-        {
-            Vector3 nextPoint = new Vector3();
-
-            nextPoint.x = float.Parse(logData.GetChild("NextPointX").Value);
-            nextPoint.y = float.Parse(logData.GetChild("NextPointY").Value);
-            nextPoint.z = float.Parse(logData.GetChild("NextPointZ").Value);
-
-            GameObject tempNextPoint = new GameObject();
-            tempNextPoint.transform.position = nextPoint;
-
-            flashPedestrianScript.nextPoint = tempNextPoint.transform;
-        }
-        //GET THE DESTINATION//
-        foreach (GameObject flashDestinationObject in GameObject.FindGameObjectsWithTag("PedestrianDestination"))
-        {
-            foreach (FlashPedestriansDestination flashDestinationScript in flashDestinationObject.GetComponents<FlashPedestriansDestination>())
-            {
-                if (flashDestinationScript.destinationName == logData.GetChild("Routing").GetChild("DestinationName").Value)
-                {
-                    flashPedestrianScript.routing = new FlashPedestriansRouting(flashDestinationScript, new Itinerary(null));
-                    break;
-                }
-            }
-        }
-        //GET THE ORIGINAL SPAWNER//
-        foreach (GameObject flashSpawnerObject in GameObject.FindGameObjectsWithTag("PedestrianSpawner"))
-        {
-            foreach (FlashPedestriansSpawner flashSpawnerScript in flashSpawnerObject.GetComponents<FlashPedestriansSpawner>())
-            {
-                if (flashSpawnerScript.id == flashPedestrianScript.spawnerId)
-                {
-                    flashPedestrianObject.transform.SetParent(flashSpawnerObject.transform);
-                    flashSpawnerScript.SpawnPedestrianFromLog(flashPedestrianScript);
-                    break;
-                }
-            }
-        }
-    }
-
-    public LogPriorities getPriorityLevel()
-    {
-        return LogPriorities.Default;
-    }
-
-    public bool destroyOnLogLoad()
-    {
-        return true;
     }
 }

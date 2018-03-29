@@ -32,13 +32,10 @@ public class rayHitPositionClass : MonoBehaviour
 
     //this bool will be used to check if the game has started or not, this kicks in after 0.5 seconds after the game has been started
     public static bool gameStartedBool = false;
-	public Camera mainCam;
+
 
     void Start()
     {
-		if (mainCam == null) {
-			mainCam = Camera.main;
-		}
         StartCoroutine(GameStarted());
     }
 
@@ -69,7 +66,7 @@ public class rayHitPositionClass : MonoBehaviour
         {
             RaycastHit hit;
 
-			Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             // only if the ray hits an object(other than the objects with layer 13(the objects that are added)) the rest of the code will follow
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, 13))

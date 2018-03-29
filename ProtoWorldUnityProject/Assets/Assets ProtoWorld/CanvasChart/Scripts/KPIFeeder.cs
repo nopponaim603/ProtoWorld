@@ -12,7 +12,7 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-/*
+﻿/*
  * 
  * KPI MODULE
  * Johnson Ho
@@ -24,28 +24,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using UnityEngine.UI;
 
 [ExecuteInEditMode]
 public class KPIFeeder : MonoBehaviour
 {
-    private static readonly log4net.ILog log =
-        log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public UIChartTypes chartType = UIChartTypes.Line;
+    public UIChartTypes chartType = UIChartTypes.Bar;
 
     public List<GameObject> gameObjects;
     public List<string> kpiStrings;
     public List<string> kpiNames;
     public List<Color> kpiColors;
 
-
     //[HideInInspector]
     //public List<string> kpiTypes;
-    [HideInInspector] public ChartController controller;
+    [HideInInspector]
+    public ChartController controller;
 
     void Start()
     {
+
         foreach (var s in kpiStrings)
         {
             log.Debug(s);
@@ -58,7 +57,7 @@ public class KPIFeeder : MonoBehaviour
     /// </summary>
     /// <param name="kpiString"></param>
     /// <returns></returns>
-    public string[] SplitKPIString(string kpiString)
+    string[] SplitKPIString(string kpiString)
     {
         var split1 = kpiString.Split(' ');
         var objName = split1[0];
@@ -67,9 +66,9 @@ public class KPIFeeder : MonoBehaviour
         scriptName = scriptName.Substring(1, scriptName.Length - 2);
         var split3 = split2[1].Split('.');
         var propName = split3[0];
-        var hashCode = "0"; //split3[1];
+        var hashCode = split3[1];
 
-        return new string[] {objName, scriptName, propName, hashCode};
+        return new string[] { objName, scriptName, propName, hashCode };
     }
 
     /// <summary>
@@ -94,7 +93,7 @@ public class KPIFeeder : MonoBehaviour
             }
             if (go == null)
             {
-                Debug.Log("Can't find KPI-gameObject? " + kpiStrings[i]);
+                Debug.Log("Can't find KPI-gameObject?");
                 continue;
             }
             var script = go.GetComponent(scriptName);
@@ -138,7 +137,7 @@ public class KPIFeeder : MonoBehaviour
         }
         foreach (var str in kpiCleanse)
         {
-            //RemoveKPI(str);
+            RemoveKPI(str);
         }
     }
 
@@ -169,12 +168,9 @@ public class KPIFeeder : MonoBehaviour
 
     void SetSeriesColorsInChartController()
     {
-        while(kpiColors.Count < kpiStrings.Count) {
-            kpiColors.Add(controller.GetSeriesColor(kpiColors.Count));
-        }
         for (int i = 0; i < kpiColors.Count; i++)
         {
-            kpiColors[i] = controller.seriesColors[i]; //controller.SetSeriesColor(i, kpiColors[i]);
+            controller.SetSeriesColor(i, kpiColors[i]);
         }
     }
 
@@ -185,6 +181,7 @@ public class KPIFeeder : MonoBehaviour
             controller.SetSeriesName(i, kpiNames[i]);
         }
     }
+
 
     public void AddKPI(string kpi, string legend, string type)
     {
@@ -223,3 +220,4 @@ public class KPIFeeder : MonoBehaviour
         //kpiTypes.Clear();
     }
 }
+

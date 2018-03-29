@@ -61,8 +61,8 @@ public class DecisionUIController : MonoBehaviour
         log.Info("Display question " + question.id + ": " + question.text);
 
         // Fill the question canvas info
-        this.transform.FindChild("QuestionId").GetComponent<Text>().text = "Question " + question.id;
-        this.transform.FindChild("QuestionText").GetComponent<Text>().text = question.text;
+        this.transform.Find("QuestionId").GetComponent<Text>().text = "Question " + question.id;
+        this.transform.Find("QuestionText").GetComponent<Text>().text = question.text;
 
         // Set the height of the box depending on the number of choices
         questionBox.sizeDelta = new Vector2(questionBox.sizeDelta.x, 125 + 75 * question.choices.Length);
@@ -72,7 +72,7 @@ public class DecisionUIController : MonoBehaviour
             G.SetActive(false);
 
         // Set the choice buttons
-        Transform choiceTemplate = this.transform.FindChild("ChoiceTemplate");
+        Transform choiceTemplate = this.transform.Find("ChoiceTemplate");
         for (int i = 0; i < question.choices.Length; i++)
         {
             // Instantiate a new choice button
@@ -81,7 +81,7 @@ public class DecisionUIController : MonoBehaviour
 
             // Get the script component of the choice button            
             RectTransform buttonBox = choiceButtons[i].GetComponent<RectTransform>();
-            Text buttonText = choiceButtons[i].transform.FindChild("ChoiceText").GetComponent<Text>();
+            Text buttonText = choiceButtons[i].transform.Find("ChoiceText").GetComponent<Text>();
             choiceButtons[i].GetComponent<ChoiceButtonController>().SetChoiceNumber(i);
 
             // Position the button according to its parent object
@@ -194,16 +194,16 @@ public class DecisionUIController : MonoBehaviour
         if (backToStartQuestionCanvas != null)
         {
             backToStartQuestionCanvas.GetComponent<FadingElementUI>().fadeInCanvas();
-            backToStartQuestionCanvas.transform.FindChild("YesButton").GetComponent<Button>().interactable = true;
-            backToStartQuestionCanvas.transform.FindChild("NoButton").GetComponent<Button>().interactable = true;
+            backToStartQuestionCanvas.transform.Find("YesButton").GetComponent<Button>().interactable = true;
+            backToStartQuestionCanvas.transform.Find("NoButton").GetComponent<Button>().interactable = true;
         }
     }
 
     public void BackToBeginningTrigger(bool isGoingBack)
     {
         backToStartQuestionCanvas.GetComponent<FadingElementUI>().fadeOutCanvas();
-        backToStartQuestionCanvas.transform.FindChild("YesButton").GetComponent<Button>().interactable = false;
-        backToStartQuestionCanvas.transform.FindChild("NoButton").GetComponent<Button>().interactable = false;
+        backToStartQuestionCanvas.transform.Find("YesButton").GetComponent<Button>().interactable = false;
+        backToStartQuestionCanvas.transform.Find("NoButton").GetComponent<Button>().interactable = false;
 
         if (isGoingBack)
         {

@@ -34,6 +34,7 @@ using Aram.OSMParser;
 using GapslabWCFservice;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class OSMReaderSQL : Editor
 {
@@ -86,7 +87,7 @@ public class OSMReaderSQL : Editor
         //BakeNavigation();
     }
 
-    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Generate water areas")]
+    //[MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Generate water areas")]
     static public void CreateWaterAreas()
     {
         var go = GameObject.Find("AramGISBoundaries");
@@ -98,7 +99,7 @@ public class OSMReaderSQL : Editor
         //AddBusStopLogic();
     }
 
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Clean Map", false, 3)]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Clean map", false, 3)]
     static void CleanScene()
     {
         var gos = GameObject.FindGameObjectsWithTag("Line");
@@ -132,7 +133,7 @@ public class OSMReaderSQL : Editor
         }
     }
 
-    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advanced/Generate Roads with Filter")]
+    [MenuItem("ProtoWorld Editor/ProtoWorld Essentials/Map Tools/Advance/Generate roads with filter")]
     static void Create2_4()
     {
         GenerateOSMRoadsWithFilterWindow window = (GenerateOSMRoadsWithFilterWindow)EditorWindow.GetWindow(typeof(GenerateOSMRoadsWithFilterWindow), true, "Road generation with filters");
@@ -582,10 +583,8 @@ public class OSMReaderSQL : Editor
         var trafficRoads = "TrafficRoads";
         var trafficRoadsLayer = LayerMask.NameToLayer(trafficRoads);
         var walkableLayer = LayerMask.NameToLayer(layerFootway); //Added by Miguel R. C.
-		var buildings = "Buildings";
-		var buildingsLayer = LayerMask.NameToLayer(buildings); //Added by GameLab
 
-		if (!navLayers.Contains(layerVehicle))
+        if (!navLayers.Contains(layerVehicle))
         {
             Debug.LogError(string.Format(layerError, layerVehicle));
             proceed = false;
@@ -691,11 +690,8 @@ public class OSMReaderSQL : Editor
                                     visibleObjects[i].gameObject.layer = trafficRoadsLayer;
                                     GameObjectUtility.SetStaticEditorFlags(visibleObjects[i].gameObject, StaticEditorFlags.OccludeeStatic | StaticEditorFlags.OccluderStatic | StaticEditorFlags.NavigationStatic);
                                     GameObjectUtility.SetNavMeshArea(visibleObjects[i].gameObject, (int)layers[layerVehicle]);
-								}
-								else if(matname.Contains("Building")) {
-									visibleObjects[i].gameObject.layer = buildingsLayer; //Added by GameLab
-								}
-							}
+                                }
+                            }
                         }
                         catch (System.Exception ex)
                         {
@@ -717,8 +713,10 @@ public class OSMReaderSQL : Editor
 
     private static void BakeNavigation()
     {
-        NavMeshBuilder.ClearAllNavMeshes();
-        NavMeshBuilder.BuildNavMeshAsync();
+        //print("Skip Bake Navigation.");
+        //NavMeshBuilder.Cancel();
+        //NavMeshBuilder.BuildNavMeshData();
+       
     }
 
     public override void OnInspectorGUI()
@@ -738,7 +736,7 @@ public class OSMReaderSQL : Editor
             if (!EditorUtility.DisplayCancelableProgressBar("Grouping in progress", "Grouping all the buildings\t" + i + "/" + gos.Length, i / (float)gos.Length))
             {
                 gos[i].transform.parent = go.transform;
-			}
+            }
             else
             {
                 EditorUtility.ClearProgressBar();

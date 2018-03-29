@@ -318,15 +318,12 @@ public class FlashCreatorEditor : Editor
     private void CheckModuleExist()
     {
         ProtoWorldMenu.AddModuleIfNotExist(moduleName);
-		//var module = GameObject.Find(moduleName);
-		//if (module == null)
-		//{
-		//    PrefabUtility.DisconnectPrefabInstance(PrefabUtility.InstantiatePrefab(pedestrianModule));
-		//    //EditorUtility.DisplayDialog("GameObject added...", moduleName + "was added to the scene", "OK");
-		//}
-
-		// Add the module to the pedestrian layer so the micro/macro visualisation works simply by selecting this module.
-		GameObject.Find(moduleName).layer = LayerMask.NameToLayer("Pedestrian");
-	}
+        //var module = GameObject.Find(moduleName);
+        //if (module == null)
+        //{
+        //    PrefabUtility.DisconnectPrefabInstance(PrefabUtility.InstantiatePrefab(pedestrianModule));
+        //    //EditorUtility.DisplayDialog("GameObject added...", moduleName + "was added to the scene", "OK");
+        //}
+    }
 }
 

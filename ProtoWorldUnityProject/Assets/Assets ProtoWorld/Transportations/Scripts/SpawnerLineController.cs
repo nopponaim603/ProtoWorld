@@ -23,7 +23,7 @@ using System.Linq;
 /// </summary>
 public class SpawnerLineController : MonoBehaviour
 {
-    public HashSet<GameObject> vehiclesOutOfService;
+    protected HashSet<GameObject> vehiclesOutOfService;
 
     public int numberVehiclesOutOfService;
 
@@ -32,20 +32,20 @@ public class SpawnerLineController : MonoBehaviour
     [Range(1, 65535)]
     public float localSpawnRate = 5;
 
-    public float globalSpawnRate = 5;
+    protected float globalSpawnRate = 5;
 
     public bool spawnFromStart = false;
 
     [Range(0, 65535)]
     public float spawnFromStartDelay = 0;
 
-    public float startTime;
+    protected float startTime;
 
-    public LineController transline;
+    protected LineController transline;
 
-    public RoutingController mainRouter;
+    protected RoutingController mainRouter;
 
-    public TimeController timeController;
+    protected TimeController timeController;
 
     public GameObject modelToSpawn;
 
@@ -56,9 +56,7 @@ public class SpawnerLineController : MonoBehaviour
     public void Start()
     {
         timeController = GameObject.FindObjectOfType<TimeController>();
-		if(timeController == null)
-			Debug.LogError("No timeController found!");
-		mainRouter = GameObject.FindObjectOfType<RoutingController>();
+        mainRouter = GameObject.FindObjectOfType<RoutingController>();
         if (mainRouter == null)
             Debug.LogError("No routingController found!");
         transline = GetComponent<LineController>();
@@ -94,41 +92,22 @@ public class SpawnerLineController : MonoBehaviour
     /// </summary>
     public void LateUpdate()
     {
-        if (!timeController.IsPaused()) {
-            if (timeController == null)
-                return;
-
-            if (timeController.gameTime - startTime > ((useGlobalSpawnRate) ? globalSpawnRate : localSpawnRate))
-            {
-                //if (category == LineCategory.Train || category == LineCategory.Metro || category == LineCategory.Tram)
-                SpawnAndResetTimer();
-            }
-            foreach (var vehicle in transline.vehicles)
-            {
-                if (vehicle != null) {
-                    if (vehicle.gameObject.activeInHierarchy == false)
-                    {
-                        vehiclesOutOfService.Add(vehicle);
-                    }
-                }
-            }
-            numberVehiclesOutOfService = vehiclesOutOfService.Count;
-        }
-    }
-
-    public void spawnVehicleFromLog(GameObject logVehicle)
-    {
-
         if (timeController == null)
             return;
-        startTime = timeController.gameTime;
-        GameObject vehicle;
-        vehicle = VehicleController.CreateGameObject(transline, LineDirection.OutBound);
-        vehicle.GetComponent<VehicleController>().timeController = timeController;
-        vehicle.GetComponent<VehicleController>().spawnerLineController = this;
-        TimeController test = vehicle.GetComponent<VehicleController>().timeController;
-        vehicle.transform.SetParent(transform);
-        transline.AddVehicle(vehicle);
+
+        if (timeController.gameTime - startTime > ((useGlobalSpawnRate) ? globalSpawnRate : localSpawnRate))
+        {
+            //if (category == LineCategory.Train || category == LineCategory.Metro || category == LineCategory.Tram)
+            SpawnAndResetTimer();
+        }
+        foreach (var vehicle in transline.vehicles)
+        {
+            if (vehicle.gameObject.activeInHierarchy == false)
+            {
+                vehiclesOutOfService.Add(vehicle);
+            }
+        }
+        numberVehiclesOutOfService = vehiclesOutOfService.Count;
     }
 
     /// <summary>
@@ -148,15 +127,11 @@ public class SpawnerLineController : MonoBehaviour
             vehiclesOutOfService.Remove(vehicle);
             vehicle.SetActive(true);
             vehicle.GetComponent<VehicleController>().ResetVehicle(LineDirection.OutBound);
-            vehicle.GetComponent<VehicleController>().spawnerLineController = this;
         }
         else
         {
             vehicle = VehicleController.CreateGameObject(transline, LineDirection.OutBound);
             vehicle.transform.SetParent(transform);
-			// Provide this from our cached version to improve performance, as this is called a lot during spawning events.
-			vehicle.GetComponent<VehicleController>().timeController = timeController;
-            vehicle.GetComponent<VehicleController>().spawnerLineController = this;
             transline.AddVehicle(vehicle);
         }
         if (vehiclesOutOfService.Count > 0)
@@ -165,15 +140,11 @@ public class SpawnerLineController : MonoBehaviour
             vehiclesOutOfService.Remove(vehicle);
             vehicle.SetActive(true);
             vehicle.GetComponent<VehicleController>().ResetVehicle(LineDirection.InBound);
-            vehicle.GetComponent<VehicleController>().spawnerLineController = this;
         }
         else
         {
             vehicle = VehicleController.CreateGameObject(transline, LineDirection.InBound);
             vehicle.transform.SetParent(transform);
-			// Provide this from our cached version to improve performance, as this is called a lot during spawning events.
-			vehicle.GetComponent<VehicleController>().timeController = timeController;
-            vehicle.GetComponent<VehicleController>().spawnerLineController = this;
             transline.AddVehicle(vehicle);
         }
     }

@@ -12,33 +12,30 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-/*
-* 
-* FLASH PEDESTRIAN SIMULATOR
-* FlashPedestriansSpawner.cs
-* Miguel Ramos Carretero
-* 
-*/
+﻿/*
+ * 
+ * FLASH PEDESTRIAN SIMULATOR
+ * FlashPedestriansSpawner.cs
+ * Miguel Ramos Carretero
+ * 
+ */
 
 using UnityEngine;
 using System.Collections;
 using GaPSLabsUnity.StateMachine;
 using System.Collections.Generic;
 using System.Threading;
-using System;
 
 /// <summary>
 /// Implementation of the behaviour of a spawner for Flash Pedestrians.
 /// </summary>
-public class FlashPedestriansSpawner : MonoBehaviour, Loggable
+public class FlashPedestriansSpawner : MonoBehaviour
 {
     /// <summary>
     /// Maximum number of pedestrians that the object will spawn. 
     /// </summary>
     [Range(0, 10000)]
     public int maxNumberOfPedestriansToSpawn = 1;
-
-    public int id;
 
     /// <summary>
     /// If true, pedestrians will be spawned in an infinite loop. 
@@ -118,12 +115,12 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
     /// <summary>
     /// Reference to the script that defines the global parameters for the Flash Pedestrians.
     /// </summary>
-    public FlashPedestriansGlobalParameters pedGlobalParameters;
+    private FlashPedestriansGlobalParameters pedGlobalParameters;
 
     /// <summary>
     /// Itinerary informer that handles the commuting of pedestrians.
     /// </summary>
-    public FlashPedestriansInformer flashInformer;
+    private FlashPedestriansInformer flashInformer;
 
     /// <summary>
     /// Destination entries where pedestrians can go. 
@@ -133,29 +130,16 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
     /// <summary>
     /// Static int to get the unique ids for the pedestrians.
     /// </summary>
-    public static int nextIdForPedestrian = 0;
-
-	private Heatmap heatMap;
+    private static int nextIdForPedestrian = 0;
 
     /// <summary>
     /// Awakes the script.
     /// </summary>
     void Awake()
     {
-        initializeSpawner();
-
-		heatMap = FindObjectOfType<Heatmap>();
-		LoggableManager.subscribe(this);
-	}
-
-    public void initializeSpawner()
-    {
-        //reset cache
-        pedestrianCache = new Queue();
         // Get the global parameters of Flash Pedestrians
-        pedGlobalParameters = GameObject.Find("FlashPedestriansModule").GetComponent<FlashPedestriansGlobalParameters>();
-        id = FlashPedestriansGlobalParameters.nextSpawnerId;
-        FlashPedestriansGlobalParameters.nextSpawnerId++;
+        pedGlobalParameters = GetComponentInParent<FlashPedestriansGlobalParameters>();
+
         // Fill the cache with pedestrians
         for (int i = 0; i < initialNumberOfPedestriansInCache; i++)
         {
@@ -191,7 +175,7 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
     {
         if (maxNumberOfPedestriansToSpawn > 0 || spawnPedestriansInInfiniteLoop)
         {
-            InvokeRepeating("SpawnGroupOfPedestrians", 1.0f + UnityEngine.Random.Range(1.0f, 4.0f) + spawningDelayAtStart, spawningFrequencyInSeconds);
+            InvokeRepeating("SpawnGroupOfPedestrians", 1.0f + Random.Range(1.0f, 4.0f) + spawningDelayAtStart, spawningFrequencyInSeconds);
         }
     }
 
@@ -204,12 +188,13 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
         if (!pedGlobalParameters.flashPedestriansPaused)
         {
             // Create a new pedestrian profile
-            FlashPedestriansProfile profile = new FlashPedestriansProfile(pedGlobalParameters.averageSpeed + UnityEngine.Random.Range(-0.5f, 0.5f),
-                true /*future use*/, true /*future use*/, UnityEngine.Random.Range(0.0f, 1.0f), false /*future use*/, UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), pedGlobalParameters.sumoCarAwarenessEnabled, TravelPreference.time);
+            FlashPedestriansProfile profile = new FlashPedestriansProfile(pedGlobalParameters.averageSpeed + Random.Range(-0.5f, 0.5f),
+                true /*future use*/, true /*future use*/, Random.Range(0.0f, 1.0f), false /*future use*/, Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), pedGlobalParameters.sumoCarAwarenessEnabled, TravelPreference.time);
+
             //Find a destination
             FlashPedestriansDestination destination = null;
             float[] priorityPercentages = getPrioritiesOfAllDestinations();
-            float rand = UnityEngine.Random.Range(0.0f, 0.99f);
+            float rand = Random.Range(0.0f, 0.99f);
             for (int i = 0; i < priorityPercentages.Length; i++)
             {
                 if (rand < priorityPercentages[i])
@@ -226,7 +211,7 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
 
             //Find a new random spawning point inside the radious defined
             Vector3 spawningPoint = this.transform.position
-                + new Vector3(UnityEngine.Random.Range(-spawningArea, spawningArea), 0.0f, UnityEngine.Random.Range(-spawningArea, spawningArea));
+                + new Vector3(Random.Range(-spawningArea, spawningArea), 0.0f, Random.Range(-spawningArea, spawningArea));
 
             //Move the spawning point to the closest point in the walkable navmesh (is this an expensive operation?)
             //NavMeshHit hit;
@@ -237,7 +222,7 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
             Itinerary itinerary = flashInformer.FindBestItinerary(spawningPoint, destination, stationsNearThisSpawner, profile.travelPreference);
 
             //Calculate number of pedestrians to spawn in this iteration
-            int pedToSpawn = UnityEngine.Random.Range(minPedestriansPerSpawningIteration, maxPedestriansPerSpawningIteration);
+            int pedToSpawn = Random.Range(minPedestriansPerSpawningIteration, maxPedestriansPerSpawningIteration);
 
             //Spawn pedestrians
             for (int i = 0; i < pedToSpawn; i++)
@@ -256,7 +241,7 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
     {
         GameObject newAgent;
 
-        spawningPoint += new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f), 0.0f, UnityEngine.Random.Range(-1.0f, 1.0f));
+        spawningPoint += new Vector3(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f));
 
         if (pedestrianCache.Count > 0)
         {
@@ -281,72 +266,10 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
 
         FlashPedestriansController controller = newAgent.GetComponent<FlashPedestriansController>();
 
-        controller.uniqueId = Interlocked.Increment(ref nextIdForPedestrian);
-        controller.spawnerId = id;
+        controller.uniqueId = nextIdForPedestrian++;
         controller.profile = profile;
         controller.routing = new FlashPedestriansRouting(destination, itinerary);
         controller.flashInformer = flashInformer;
-
-		// Provide these from our cached version to improve performance, as this is called a lot during spawning events.
-		controller.globalParam = pedGlobalParameters;
-		controller.heatMap = heatMap;
-
-		// Subscribe pedestrian to the itinerary informer
-		flashInformer.SubscribePedestrian(controller);
-
-        newAgent.name = "flashPedestrian_" + this.name + "_" + "_" + controller.uniqueId;
-
-        newAgent.SetActive(true);
-
-        // Atomic increment of the KPI property
-        Interlocked.Increment(ref pedGlobalParameters.numberOfPedestriansOnScenario);
-
-        if (++numberOfPedestriansGenerated >= maxNumberOfPedestriansToSpawn && !spawnPedestriansInInfiniteLoop)
-            CancelInvoke();
-    }
-
-    public void SpawnPedestrianFromLog(FlashPedestriansController pedestrianInformation)
-    {
-        GameObject newAgent;
-
-        if (pedestrianCache.Count > 0)
-        {
-            newAgent = (GameObject)pedestrianCache.Dequeue();
-            newAgent.transform.position = pedestrianInformation.transform.position;
-            //print(newAgent.transform.position);
-        }
-        else
-        {
-            newAgent = Instantiate(pedGlobalParameters.pedestrianObject, pedestrianInformation.transform.position, Quaternion.identity) as GameObject;
-            newAgent.transform.SetParent(this.transform, true);
-            //print(newAgent.transform.position);
-        }
-
-        if (pedGlobalParameters.rumoursEnabled || pedGlobalParameters.bikesEnabled)
-        {
-            BoxCollider col = newAgent.GetComponent<BoxCollider>();
-
-            if (col != null)
-                col.enabled = true;
-            else
-                newAgent.AddComponent<BoxCollider>();
-        }
-
-        Itinerary itinerary = flashInformer.FindBestItinerary(pedestrianInformation.transform.position, pedestrianInformation.routing.destinationPoint, 
-            pedestrianInformation.StationsNearCurrentPosition(), pedestrianInformation.profile.travelPreference);
-
-        FlashPedestriansController controller = newAgent.GetComponent<FlashPedestriansController>();
-
-        controller.uniqueId = pedestrianInformation.uniqueId;
-        nextIdForPedestrian = controller.uniqueId;
-        controller.spawnerId = id;
-        controller.profile = pedestrianInformation.profile;
-        controller.routing = new FlashPedestriansRouting(pedestrianInformation.routing.destinationPoint, itinerary);
-        controller.flashInformer = flashInformer;
-
-        // Provide these from our cached version to improve performance, as this is called a lot during spawning events.
-        controller.globalParam = pedGlobalParameters;
-        controller.heatMap = heatMap;
 
         // Subscribe pedestrian to the itinerary informer
         flashInformer.SubscribePedestrian(controller);
@@ -388,81 +311,6 @@ public class FlashPedestriansSpawner : MonoBehaviour, Loggable
 
         return priorities;
     }
-	public LogDataTree getLogData(){
-		LogDataTree logData = new LogDataTree (tag,null);
-        logData.AddChild(new LogDataTree("ID", id.ToString()));
-        logData.AddChild(new LogDataTree("PositionX",transform.position.x.ToString()));
-		logData.AddChild(new LogDataTree("PositionY",transform.position.y.ToString()));
-		logData.AddChild(new LogDataTree("PositionZ",transform.position.z.ToString()));
-		logData.AddChild(new LogDataTree("MaxNumberOfPedestriansToSpawn", maxNumberOfPedestriansToSpawn.ToString()));
-		logData.AddChild(new LogDataTree("SpawnPedestriansInInfiteLoop",spawnPedestriansInInfiniteLoop.ToString()));
-		logData.AddChild(new LogDataTree("MinPedestriansPerSpawningIteration",minPedestriansPerSpawningIteration.ToString()));
-		logData.AddChild(new LogDataTree("MaxPedestriansPerSpawningIteration",maxPedestriansPerSpawningIteration.ToString()));
-		logData.AddChild(new LogDataTree("PedestrianSpawnFrequencyInSeconds",spawningFrequencyInSeconds.ToString()));
-		logData.AddChild(new LogDataTree("SpawningArea",spawningArea.ToString()));
-		logData.AddChild(new LogDataTree("RadiousToCheckStations",radiousToCheckStations.ToString()));
-		logData.AddChild(new LogDataTree("SpawningDelayAtStart",spawningDelayAtStart.ToString()));
-		logData.AddChild(new LogDataTree("InitialNumberOfPedestriansInCache",initialNumberOfPedestriansInCache.ToString()));
-		logData.AddChild(new LogDataTree("NumberOfPedestriansGenerated",numberOfPedestriansGenerated.ToString()));
-		logData.AddChild(new LogDataTree("NumberOfPedestriansOnDestination",numberOfPedestriansOnDestination.ToString()));
-		return logData;
-	}
-
-    public void rebuildFromLog(LogDataTree logData)
-    {
-        GameObject flashSpawnerObject = null;
-        FlashPedestriansSpawner flashSpawnerScript = new FlashPedestriansSpawner();
-        flashSpawnerScript.id = int.Parse(logData.GetChild("ID").Value);
-        foreach (Loggable spawner in LoggableManager.getCurrentSubscribedLoggables())
-        {
-            if (spawner == null)
-                continue;
-            //get the destination that needs to be altered and modify it. Deletion causes the sim to act weird
-            //so thats why we need to modify the existing one.
-            if (((MonoBehaviour)spawner).gameObject.tag == "PedestrianSpawner")
-            {
-                if (((MonoBehaviour)spawner).GetComponent<FlashPedestriansSpawner>().id == flashSpawnerScript.id)
-                {
-                    flashSpawnerObject = ((MonoBehaviour)spawner).gameObject;
-                    flashSpawnerScript = flashSpawnerObject.GetComponent<FlashPedestriansSpawner>();
-
-                    Vector3 position = new Vector3();
-                    position.x = float.Parse(logData.GetChild("PositionX").Value);
-                    position.y = float.Parse(logData.GetChild("PositionY").Value);
-                    position.z = float.Parse(logData.GetChild("PositionZ").Value);
-                    flashSpawnerObject.transform.position = position;
-                    flashSpawnerScript.transform.position = position;
-                    flashSpawnerScript.maxNumberOfPedestriansToSpawn = int.Parse(logData.GetChild("MaxNumberOfPedestriansToSpawn").Value);
-                    flashSpawnerScript.spawnPedestriansInInfiniteLoop = bool.Parse(logData.GetChild("SpawnPedestriansInInfiteLoop").Value);
-                    flashSpawnerScript.minPedestriansPerSpawningIteration = int.Parse(logData.GetChild("MinPedestriansPerSpawningIteration").Value);
-                    flashSpawnerScript.maxPedestriansPerSpawningIteration = int.Parse(logData.GetChild("MaxPedestriansPerSpawningIteration").Value);
-                    flashSpawnerScript.spawningFrequencyInSeconds = float.Parse(logData.GetChild("PedestrianSpawnFrequencyInSeconds").Value);
-                    flashSpawnerScript.spawningArea = float.Parse(logData.GetChild("SpawningArea").Value);
-                    flashSpawnerScript.radiousToCheckStations = float.Parse(logData.GetChild("RadiousToCheckStations").Value);
-                    flashSpawnerScript.spawningDelayAtStart = float.Parse(logData.GetChild("SpawningDelayAtStart").Value);
-                    flashSpawnerScript.initialNumberOfPedestriansInCache = int.Parse(logData.GetChild("InitialNumberOfPedestriansInCache").Value);
-                    flashSpawnerScript.numberOfPedestriansGenerated = int.Parse(logData.GetChild("NumberOfPedestriansGenerated").Value);
-                    flashSpawnerScript.numberOfPedestriansOnDestination = int.Parse(logData.GetChild("NumberOfPedestriansOnDestination").Value);
-                    flashSpawnerObject.name = "FlashSpawner";
-                    flashSpawnerScript.enabled = true;
-                }
-            }
-        }
-    }
-
-    void OnDestroy()
-    {
-        pedestrianCache.Clear();
-    }
-
-	public  LogPriorities getPriorityLevel()
-    {
-		return LogPriorities.High;
-    }
-
-	public bool destroyOnLogLoad(){
-		return false;
-	}
 }
 
 
