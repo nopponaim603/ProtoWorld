@@ -17,5 +17,7 @@ public class NetworkLobbyHook : LobbyHook
         spaceship.score = 0;
         spaceship.lifeCount = 3;
         */
+
+        print("Network Lobby Hook");
     }
 }
