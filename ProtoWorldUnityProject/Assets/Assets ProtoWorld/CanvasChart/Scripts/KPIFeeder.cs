@@ -12,12 +12,12 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-﻿/*
- * 
- * KPI MODULE
- * Johnson Ho
- * 
- */
+/*
+* 
+* KPI MODULE
+* Johnson Ho
+* 
+*/
 
 using UnityEngine;
 using System.Collections;
@@ -25,12 +25,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-[ExecuteInEditMode]
+ [ExecuteInEditMode]
 public class KPIFeeder : MonoBehaviour
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public UIChartTypes chartType = UIChartTypes.Bar;
+    public UIChartTypes chartType = UIChartTypes.Line;
 
     public List<GameObject> gameObjects;
     public List<string> kpiStrings;
@@ -181,7 +181,6 @@ public class KPIFeeder : MonoBehaviour
             controller.SetSeriesName(i, kpiNames[i]);
         }
     }
-
 
     public void AddKPI(string kpi, string legend, string type)
     {

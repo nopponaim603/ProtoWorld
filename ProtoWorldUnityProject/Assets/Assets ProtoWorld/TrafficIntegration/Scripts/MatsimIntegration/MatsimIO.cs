@@ -12,7 +12,7 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -34,15 +34,28 @@ public class MatsimIO : SimulationIOBase
         return false;
     }
 
+    /// <summary>
+    /// First version to read from the DB.
+    /// </summary>
+    /// <param name="connectionString"></param>
     public override void Read(string connectionString)
     {
         string vehTable = "event_position";
+        currentReadingStep = 3600*5;
+
         try
         {
             NpgsqlConnection dbConn = new NpgsqlConnection(connectionString);
 
-            string commandString = string.Format("SELECT * FROM {0} order by eventtime, veh_id;", vehTable);
-            //Debug.Log(commandString);
+            // TODO It might generate a connection timeout if this queries the whole table,
+            // therefore more reasonable to split up the query by eventtime (ex. using a for-loop)...
+            string commandString = string.Format(
+                "SELECT * FROM {0} WHERE eventtime>={1}" +
+                " AND eventtime<{2} ORDER BY eventtime, veh_id",
+                vehTable, trafficDB.getNumberOfTimeSteps(), trafficDB.getNumberOfTimeSteps() + readingChunkForMatsim);
+
+            Debug.Log(commandString);
+
             var dbCommand = new NpgsqlCommand(commandString, dbConn);
 
             dbConn.Open();
@@ -52,20 +65,25 @@ public class MatsimIO : SimulationIOBase
             {
                 var veh_id = dbReader["veh_id"].ToString();
                 var time = dbReader["eventtime"].ToString();
+				var type = dbReader["veh_type"].ToString();
                 var x = dbReader["x"].ToString();
                 var y = dbReader["y"].ToString();
                 var ang = dbReader["deg"].ToString();
+
                 //var str = string.Join(",", new string[] { veh_id, time, x, y, ang });
                 //output.Add(str);
                 //Debug.Log(str);
 
                 TryAddTimeStep(float.Parse(time));
-                InsertVehicle(veh_id, x, y, "default", ang);
+                InsertVehicle(veh_id, x, y, type, ang);
             }
             if (!dbReader.IsClosed)
             {
                 dbReader.Close();
             }
+
+            Debug.Log("Reading chunk completed");
+
             dbConn.Close();
         }
         catch (Exception ex)
