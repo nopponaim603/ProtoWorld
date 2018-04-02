@@ -157,7 +157,7 @@ public class FlashPedestriansController : TravelerController
             }
 
             // If going to destination, check if pedestrian has arrived to destination
-            if (goingToDestination && Vector3.Distance(this.transform.position, routing.destinationPoint.transform.position) < 4.0f)
+            if (goingToDestination && Vector3.Distance(transform.position, routing.destination.transform.position) < 4.0f)
             {
                 // Arrives at the destination
                 goingToDestination = false;
@@ -180,7 +180,7 @@ public class FlashPedestriansController : TravelerController
             }
 
             // If going to destination biking, check if pedestrian has arrived to destination
-            if (goingBikingToDestination && Vector3.Distance(this.transform.position, routing.destinationPoint.transform.position) < 4.0f)
+            if (goingBikingToDestination && Vector3.Distance(this.transform.position, routing.destination.transform.position) < 4.0f)
             {
                 // Arrives at the destination
                 goingBikingToDestination = false;
@@ -267,7 +267,7 @@ public class FlashPedestriansController : TravelerController
             bike.gameObject.SetActive(true);
 
         navAgent.ResetPath();
-        navAgent.SetDestination(routing.destinationPoint.transform.position);
+        navAgent.SetDestination(routing.destination.transform.position);
 
         UpdateInfoBalloon();
     }
@@ -305,7 +305,7 @@ public class FlashPedestriansController : TravelerController
         }
         else
         {
-            navAgent.SetDestination(routing.destinationPoint.transform.position);
+            navAgent.SetDestination(routing.destination.transform.position);
             goingToDestination = true;
         }
 
@@ -388,12 +388,12 @@ public class FlashPedestriansController : TravelerController
         ResetStopIndex();
 
         if (stationsNearby != null)
-            routing = new FlashPedestriansRouting(routing.destinationPoint,
-                flashInformer.FindBestItinerary(this.transform.position, routing.destinationPoint, stationsNearby, profile.travelPreference));
+            routing = new FlashPedestriansRouting(routing.destination,
+                flashInformer.FindBestItinerary(this.transform.position, routing.destination, stationsNearby, profile.travelPreference));
         else
             //In this case, the pedestrian will find the nearby stations from its point
-            routing = new FlashPedestriansRouting(routing.destinationPoint,
-                flashInformer.FindBestItinerary(this.transform.position, routing.destinationPoint, StationsNearCurrentPosition(), profile.travelPreference));
+            routing = new FlashPedestriansRouting(routing.destination,
+                flashInformer.FindBestItinerary(this.transform.position, routing.destination, StationsNearCurrentPosition(), profile.travelPreference));
 
         if (routing != null)
             if (routing.itinerary != null)
@@ -510,7 +510,7 @@ public class FlashPedestriansController : TravelerController
         if (goingToStation)
         {
             // Find a better itinerary
-            Itinerary newItinerary = flashInformer.FindBestItinerary(this.transform.position, routing.destinationPoint, StationsNearCurrentPosition(), profile.travelPreference);
+            Itinerary newItinerary = flashInformer.FindBestItinerary(this.transform.position, routing.destination, StationsNearCurrentPosition(), profile.travelPreference);
 
             if (!routing.itinerary.Equals(newItinerary))
             {
@@ -525,7 +525,7 @@ public class FlashPedestriansController : TravelerController
 
                 navAgent.enabled = false;
                 ResetStopIndex();
-                routing = new FlashPedestriansRouting(routing.destinationPoint, newItinerary);
+                routing = new FlashPedestriansRouting(routing.destination, newItinerary);
                 itineraryChanged = true;
                 WalkToNextPoint();
 
@@ -586,7 +586,7 @@ public class FlashPedestriansController : TravelerController
             goingToStation = false;
             navAgent.enabled = false;
             ResetStopIndex();
-            routing = new FlashPedestriansRouting(routing.destinationPoint, rumour.Item2);
+            routing = new FlashPedestriansRouting(routing.destination, rumour.Item2);
             WalkToNextPoint();
 
             //Change in visualization (for testing purposes)

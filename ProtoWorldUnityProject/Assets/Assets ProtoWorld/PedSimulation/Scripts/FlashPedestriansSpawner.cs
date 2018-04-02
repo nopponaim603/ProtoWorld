@@ -172,7 +172,7 @@ public class FlashPedestriansSpawner : MonoBehaviour
     /// <summary>
     /// Destination entries where pedestrians can go. 
     /// </summary>
-    private FlashPedestriansDestination[] destinationPoints;
+    private FlashPedestriansDestination[] destinations;
 
     /// <summary>
     /// Static int to get the unique ids for the pedestrians.
@@ -221,7 +221,8 @@ public class FlashPedestriansSpawner : MonoBehaviour
         // Fill the cache with pedestrians
         for (int i = 0; i < initialNumberOfPedestriansInCache; i++)
         {
-            GameObject newAgent = Instantiate(pedGlobalParameters.pedestrianObject[Random.Range(0, pedGlobalParameters.pedestrianObject.Length)],
+            //Random.Range(0, pedGlobalParameters.pedestrianObject.Length)
+            GameObject newAgent = Instantiate(pedGlobalParameters.pedestrianObject,
                 Vector3.zero, Quaternion.identity) as GameObject;
 
             newAgent.transform.SetParent(this.transform, true);
@@ -248,13 +249,13 @@ public class FlashPedestriansSpawner : MonoBehaviour
                             this.transform.position.z + Random.Range(-radiousToPutSpawningPoints, radiousToPutSpawningPoints));
 
             //Move the spawning point to the closest point in the walkable navmesh
-            NavMeshHit hit;
+            UnityEngine.AI.NavMeshHit hit;
 
-            NavMesh.SamplePosition(point, out hit, 1000.0f,
-                  1 << NavMesh.GetAreaFromName("footway") | 1 << NavMesh.GetAreaFromName("residential")
-                  | 1 << NavMesh.GetAreaFromName("cycleway") | 1 << NavMesh.GetAreaFromName("Pedestrian")
-                  | 1 << NavMesh.GetAreaFromName("step") | 1 << NavMesh.GetAreaFromName("TrafficRoads") 
-                  | 1 << NavMesh.GetAreaFromName("Walkable"));
+            UnityEngine.AI.NavMesh.SamplePosition(point, out hit, 1000.0f,
+                  1 << UnityEngine.AI.NavMesh.GetAreaFromName("footway") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("residential")
+                  | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("cycleway") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("Pedestrian")
+                  | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("step") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("TrafficRoads") 
+                  | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("Walkable"));
 
             point = hit.position;
 
@@ -283,7 +284,7 @@ public class FlashPedestriansSpawner : MonoBehaviour
         flashInformer = FindObjectOfType<FlashPedestriansInformer>();
 
         // Get the destinations
-        destinationPoints = FindObjectsOfType<FlashPedestriansDestination>();
+        destinations = FindObjectsOfType<FlashPedestriansDestination>();
     }
 
     /// <summary>
@@ -335,7 +336,8 @@ public class FlashPedestriansSpawner : MonoBehaviour
             FlashPedestriansProfile profile = new FlashPedestriansProfile(pedGlobalParameters.averageSpeed + Random.Range(-0.5f, 0.5f),
                 true /*future use*/, true /*future use*/, Random.Range(0.0f, 1.0f), false /*future use*/,
                 Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), pedGlobalParameters.sumoCarAwarenessEnabled,
-                (Random.value < pedGlobalParameters.percOfPedWillingToTakeTransport) ? TravelPreference.time : TravelPreference.noPublicTransport);
+                //percOfPedWillingToTakeTransport
+                (Random.value < pedGlobalParameters.percOfPedWillingToChangeDestination) ? TravelPreference.time : TravelPreference.noPublicTransport);
 
             //Find a destination
             FlashPedestriansDestination destination = null;
@@ -346,10 +348,10 @@ public class FlashPedestriansSpawner : MonoBehaviour
             {
                 if (rand < priorityPercentages[i])
                 {
-                    destination = destinationPoints[i];
+                    destination = destinations[i];
 
                     //Get one of the destination points within the destination choosen
-                    destinationIndex = Random.Range(0, destination.numberOfDestinationPoints);
+                    destinationIndex = Random.Range(0, destination.numberOfdestinations);
 
                     break;
                 }
@@ -404,7 +406,8 @@ public class FlashPedestriansSpawner : MonoBehaviour
         }
         else
         {
-            newAgent = Instantiate(pedGlobalParameters.pedestrianObject[Random.Range(0, pedGlobalParameters.pedestrianObject.Length)],
+            //Random.Range(0, pedGlobalParameters.pedestrianObject.Length)
+            newAgent = Instantiate(pedGlobalParameters.pedestrianObject,
                 spawningPoint, Quaternion.identity) as GameObject;
 
             newAgent.transform.SetParent(this.transform, true);
@@ -449,23 +452,23 @@ public class FlashPedestriansSpawner : MonoBehaviour
     /// Calculates the percentages of priority for each destination point. 
     /// </summary>
     /// <returns>An array with the accumulate percentages. Each percentage in position i in the 
-    /// returned array corresponds with the destination i in the array of destinationPoints.
+    /// returned array corresponds with the destination i in the array of destinations.
     /// </returns>
     public float[] GetPrioritiesOfAllDestinations()
     {
         //Get the sum of all the priorities
         float prioritySum = 0;
-        foreach (FlashPedestriansDestination D in destinationPoints)
+        foreach (FlashPedestriansDestination D in destinations)
         {
             prioritySum += D.destinationPriority;
         }
 
         //Get the percentage of each destination and put it on an array
-        float[] priorities = new float[destinationPoints.Length];
+        float[] priorities = new float[destinations.Length];
         float accumulatedPriority = 0;
-        for (int i = 0; i < destinationPoints.Length; i++)
+        for (int i = 0; i < destinations.Length; i++)
         {
-            priorities[i] = destinationPoints[i].destinationPriority / prioritySum + accumulatedPriority;
+            priorities[i] = destinations[i].destinationPriority / prioritySum + accumulatedPriority;
             accumulatedPriority = priorities[i];
         }
 

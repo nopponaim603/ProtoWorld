@@ -101,7 +101,7 @@ public class ClosestBikeStation : MonoBehaviour {
 
 		}
 
-		//now it will store the distances to the finalDestinationpoint and closestBikestationpoint
+		//now it will store the distances to the finaldestination and closestBikestationpoint
 		float distance3 = Vector3.Distance (transform.position, this.gameObject.GetComponent<PedestrianKTHController>().finalDestination);
 		float distance4 = Vector3.Distance (transform.position, closestBikeStationPos);
 

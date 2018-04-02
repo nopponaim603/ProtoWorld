@@ -53,7 +53,7 @@ public class FlashPedestriansDestination : MonoBehaviour
     /// Number of destination points around this destination.
     /// </summary>
     [Range(1, 10000)]
-    public int numberOfDestinationPoints = 1;
+    public int numberOfdestinations = 1;
 
     /// <summary>
     /// Radious to spread the destination points.
@@ -81,14 +81,14 @@ public class FlashPedestriansDestination : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        destinationTransform = new Transform[numberOfDestinationPoints];
-        stationsNearThisDestination = new Collider[numberOfDestinationPoints][];
+        destinationTransform = new Transform[numberOfdestinations];
+        stationsNearThisDestination = new Collider[numberOfdestinations][];
 
         //destinationTransform = this.transform;
 
         //FlashPedestriansGlobalParameters pedGlobalParameters = GetComponent<FlashPedestriansGlobalParameters>();
 
-        for (int i = 0; i < numberOfDestinationPoints; i++)
+        for (int i = 0; i < numberOfdestinations; i++)
         {
             GameObject dest = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             dest.transform.parent = this.transform;
@@ -108,12 +108,12 @@ public class FlashPedestriansDestination : MonoBehaviour
                       this.transform.position.z + Random.Range(-radiousToSpreadDestinations, radiousToSpreadDestinations));
 
             //Move the destination point to the closest point in the walkable navmesh
-            NavMeshHit hit;
-            NavMesh.SamplePosition(position, out hit, 1000.0f,
-                  1 << NavMesh.GetAreaFromName("footway") | 1 << NavMesh.GetAreaFromName("residential")
-                  | 1 << NavMesh.GetAreaFromName("cycleway") | 1 << NavMesh.GetAreaFromName("Pedestrian")
-                  | 1 << NavMesh.GetAreaFromName("step") | 1 << NavMesh.GetAreaFromName("TrafficRoads")
-                  | 1 << NavMesh.GetAreaFromName("Walkable"));
+            UnityEngine.AI.NavMeshHit hit;
+            UnityEngine.AI.NavMesh.SamplePosition(position, out hit, 1000.0f,
+                  1 << UnityEngine.AI.NavMesh.GetAreaFromName("footway") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("residential")
+                  | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("cycleway") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("Pedestrian")
+                  | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("step") | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("TrafficRoads")
+                  | 1 << UnityEngine.AI.NavMesh.GetAreaFromName("Walkable"));
 
             position = hit.position;
 

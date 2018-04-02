@@ -289,7 +289,7 @@ public class FlashCreatorEditor : Editor
                 InstantiatePrefab(spawnerName, point, parent);
                 break;
             case FlashOptions.Destination:
-                parent = GameObject.Find("DestinationPoints");
+                parent = GameObject.Find("destinations");
                 //InstantiatePrefab(destinationPrefab, point, parent);
                 InstantiatePrefab(destinationName, point, parent);
                 break;
