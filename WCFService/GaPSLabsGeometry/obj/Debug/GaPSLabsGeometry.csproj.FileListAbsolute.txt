@@ -120,3 +120,5 @@ G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\GaPSLabsGeometry\bin\Debu
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\GaPSLabsGeometry\obj\Debug\GaPSLabsGeometry.csprojResolveAssemblyReference.cache
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\GaPSLabsGeometry\obj\Debug\GaPSLabsGeometry.dll
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\GaPSLabsGeometry\obj\Debug\GaPSLabsGeometry.pdb
+D:\Developer\Unity\Unity Projects\OpenSource\ProtoWorld\WCFService\GaPSLabsGeometry\obj\Debug\GaPSLabsGeometry.csprojResolveAssemblyReference.cache
+D:\Developer\Unity\Unity Projects\OpenSource\ProtoWorld\WCFService\GaPSLabsGeometry\obj\Debug\GaPSLabsGeometry.csproj.CoreCompileInputs.cache
