@@ -49,7 +49,9 @@ public class ProtoWorldPlayer : NetworkBehaviour {
     {
         if (IndexPlayer != 3)
         {
-            GameObject ui = Instantiate(_ClickDropComponentLists[IndexPlayer], _parentUI.transform);
+            print("Name : " + _parentUI.name + " : " + _parentUI.transform.ToString());
+            GameObject ui = Instantiate(_ClickDropComponentLists[IndexPlayer]);
+            ui.GetComponent<RectTransform>().SetParent(_parentUI.GetComponent<RectTransform>());
             NetworkServer.Spawn(ui);
         }
         print("Try to Create.");
