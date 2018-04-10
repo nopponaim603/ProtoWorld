@@ -279,7 +279,7 @@ namespace Prototype.NetworkLobby
 
             LobbyPlayer newPlayer = obj.GetComponent<LobbyPlayer>();
             newPlayer.ToggleJoinButton(numPlayers + 1 >= minPlayers);
-
+            newPlayer.IndexPlayer = numPlayers;
 
             for (int i = 0; i < lobbySlots.Length; ++i)
             {
@@ -289,6 +289,7 @@ namespace Prototype.NetworkLobby
                 {
                     p.RpcUpdateRemoveButton();
                     p.ToggleJoinButton(numPlayers + 1 >= minPlayers);
+                    
                 }
             }
 
@@ -305,6 +306,7 @@ namespace Prototype.NetworkLobby
                 {
                     p.RpcUpdateRemoveButton();
                     p.ToggleJoinButton(numPlayers + 1 >= minPlayers);
+                    p.IndexPlayer = i;
                 }
             }
         }
