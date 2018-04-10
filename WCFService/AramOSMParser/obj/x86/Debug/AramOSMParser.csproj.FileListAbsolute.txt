@@ -109,3 +109,4 @@ G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\AramOSMParser\bin\x86\Deb
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\AramOSMParser\obj\x86\Debug\AramOSMParser.csprojResolveAssemblyReference.cache
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\AramOSMParser\obj\x86\Debug\AramOSMParser.dll
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\AramOSMParser\obj\x86\Debug\AramOSMParser.pdb
+D:\Developer\Unity\Unity Projects\OpenSource\ProtoWorld\WCFService\AramOSMParser\obj\x86\Debug\AramOSMParser.csproj.CoreCompileInputs.cache

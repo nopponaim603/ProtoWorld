@@ -129,3 +129,5 @@ G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\OsmParserTestApplication\
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\OsmParserTestApplication\obj\x86\Debug\OsmParserTestApplication.pdb
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\OsmParserTestApplication\bin\x86\Debug\AramOSMParser.xml
 G:\Data miguelrc\Documents\Unity\ProtoWorld\WCFService\OsmParserTestApplication\bin\x86\Debug\Npgsql.xml
+D:\Developer\Unity\Unity Projects\OpenSource\ProtoWorld\WCFService\OsmParserTestApplication\obj\x86\Debug\Osm Parser Test Application.csprojResolveAssemblyReference.cache
+D:\Developer\Unity\Unity Projects\OpenSource\ProtoWorld\WCFService\OsmParserTestApplication\obj\x86\Debug\Osm Parser Test Application.csproj.CoreCompileInputs.cache
