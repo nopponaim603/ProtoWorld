@@ -7,12 +7,15 @@ public class ProtoWorldPlayer : NetworkBehaviour {
     public GameObject _mainUI;
     public GameObject _parentUI;
     public GameObject[] _ClickDropComponentLists;
-
-
+    
     [SyncVar]
     public int IndexPlayer;
     public bool isFirstSetup;
     float countDown = 1f;
+
+    public bool isFirstSetingUI =false;
+    [SyncVar]
+    public bool isReadyCreateUI = false;
 	// Use this for initialization
 	void Start () {
 		
@@ -20,39 +23,40 @@ public class ProtoWorldPlayer : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        
+        if(isReadyCreateUI && !isLocalPlayer && !isFirstSetingUI)
+        {
+            isFirstSetingUI = true;
+            _mainUI.SetActive(false);
+        }
     }
 
     public override void OnStartLocalPlayer()
     {
         //isFirstSetup = false;
+        //_mainUI.SetActive(true);
         BuildClick();
-    }
-
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-
     }
 
     public void BuildClick()
     {
-    
-        _mainUI.SetActive(true);
-        CmdBuildClick(_parentUI, IndexPlayer);
-        
+        CmdBuildClick(this.gameObject,IndexPlayer);
     }
 
     [Command]
-    void CmdBuildClick(GameObject _parentUI,int IndexPlayer)
+    void CmdBuildClick(GameObject self,int IndexPlayer)
     {
         if (IndexPlayer != 3)
         {
-            print("Name : " + _parentUI.name + " : " + _parentUI.transform.ToString());
+
+            //print("Name : " + _parentUI.name + " : activeSelf = " + _parentUI.activeSelf);
+
             GameObject ui = Instantiate(_ClickDropComponentLists[IndexPlayer]);
-            ui.GetComponent<RectTransform>().SetParent(_parentUI.GetComponent<RectTransform>());
+            ui.GetComponent<ClickAndSpawn>().owner = self;
+            //ui.GetComponent<ClickAndSpawn>().RpcSetupParent();
+            //ui.transform.SetParent(_parentUI.transform);
             NetworkServer.Spawn(ui);
+
+            isReadyCreateUI = true;
         }
         print("Try to Create.");
     }
