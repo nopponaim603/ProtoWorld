@@ -62,7 +62,7 @@ public class ClickAndSpawn : NetworkBehaviour, IBeginDragHandler, IDragHandler, 
         print("Create. form Client.");
         CmdCreatePoint(rayHitPositionClass.hitLocation);
 
-        m_OnSpawn.Invoke();
+        
     }
 
     [Command]
@@ -78,6 +78,8 @@ public class ClickAndSpawn : NetworkBehaviour, IBeginDragHandler, IDragHandler, 
         NetworkServer.Spawn(obj.gameObject);
 
         print("Created. on Server");
+
+        m_OnSpawn.Invoke();
     }
 
 
