@@ -12,18 +12,19 @@ Authors of ProtoWorld: Miguel Ramos Carretero, Jayanth Raghothama, Aram Azhari, 
 
 */
 
-﻿/*
- * 
- * DRAG AND DROP SYSTEM 
- * Furkan Sonmez
- * 
- */
+/*
+* 
+* DRAG AND DROP SYSTEM 
+* Furkan Sonmez
+* 
+*/
 
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class ClickAndSpawn : NetworkBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
