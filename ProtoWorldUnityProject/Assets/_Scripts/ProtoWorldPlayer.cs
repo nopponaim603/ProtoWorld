@@ -51,7 +51,7 @@ public class ProtoWorldPlayer : NetworkBehaviour {
             //print("Name : " + _parentUI.name + " : activeSelf = " + _parentUI.activeSelf);
 
             GameObject ui = Instantiate(_ClickDropComponentLists[IndexPlayer]);
-            ui.GetComponent<ClickAndSpawn>().owner = self;
+            ui.GetComponent<ClickAndSpawnNet>().owner = self;
             //ui.GetComponent<ClickAndSpawn>().RpcSetupParent();
             //ui.transform.SetParent(_parentUI.transform);
             NetworkServer.Spawn(ui);

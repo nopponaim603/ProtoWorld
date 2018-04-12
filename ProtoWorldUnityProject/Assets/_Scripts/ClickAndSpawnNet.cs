@@ -42,6 +42,10 @@ public class ClickAndSpawnNet : NetworkBehaviour, IBeginDragHandler, IDragHandle
     [SyncVar]
     public GameObject owner;
 
+    public delegate void EventOnClickSpawn(Vector3 hitLocation);
+
+    [SyncEvent]
+    public event EventOnClickSpawn EventClickSpawn;
     /*
     [ClientRpc]
     public void RpcSetupParent()
@@ -53,6 +57,7 @@ public class ClickAndSpawnNet : NetworkBehaviour, IBeginDragHandler, IDragHandle
     public void Start()
     {
         this.transform.SetParent(owner.GetComponent<ProtoWorldPlayer>()._parentUI.transform);
+        //EventClickSpawn += CmdCreatePoint;
     }
 
     // this happens as soon as you click on the image and start dragging. So Immediately after this the object that has been instantiated will be dragged.
@@ -61,13 +66,15 @@ public class ClickAndSpawnNet : NetworkBehaviour, IBeginDragHandler, IDragHandle
         //instantiate the gameobject to the hitlocation
         print("Create. form Client.");
         CmdCreatePoint(rayHitPositionClass.hitLocation);
-
+        //EventClickSpawn(rayHitPositionClass.hitLocation);
 
     }
 
-    [Command]
+    //[Command]
     public void CmdCreatePoint(Vector3 hitLocation)
     {
+        print("Created. on Server");
+
         GameObject obj = Instantiate(objectToInstantiate, hitLocation, Quaternion.identity) as GameObject;
 
         if (objectName != "")
@@ -77,9 +84,10 @@ public class ClickAndSpawnNet : NetworkBehaviour, IBeginDragHandler, IDragHandle
 
         NetworkServer.Spawn(obj.gameObject);
 
-        print("Created. on Server");
+        //m_OnSpawn.Invoke();
 
-        m_OnSpawn.Invoke();
+        //print("Created. on Server");
+
     }
 
 
