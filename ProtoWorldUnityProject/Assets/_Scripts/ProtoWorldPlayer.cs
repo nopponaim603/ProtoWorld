@@ -31,12 +31,14 @@ public class ProtoWorldPlayer : NetworkBehaviour {
     public bool isReadyCommitPhase = false;
     [SyncVar]
     public int _CurrentGamePhase = 0;
-    public Text _GamePhaseText;
+    //public Text _GamePhaseText;
+    public ProtoWorldGamePhasePanel _GamePhasePanel;
 
 	// Use this for initialization
 	void Start () {
-        _GamePhaseText = GameObject.FindGameObjectWithTag("GamePhase").GetComponent<Text>();
-	}
+        //_GamePhaseText = GameObject.FindGameObjectWithTag("GamePhase").GetComponentInChildren<Text>();
+        _GamePhasePanel = GameObject.FindGameObjectWithTag("GamePhase").GetComponentInChildren<ProtoWorldGamePhasePanel>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -96,8 +98,8 @@ public class ProtoWorldPlayer : NetworkBehaviour {
     {
         print("Client Update Game Phase.");
         this._CurrentGamePhase = inputGamePhase;
-        _GamePhaseText.text = ((ProtoWroldNetGM.GamePhase)this._CurrentGamePhase).ToString();
-
+        
+        _GamePhasePanel.UpdatePanel(this._CurrentGamePhase);
         isReadyCommitPhase = false;
     }
 }

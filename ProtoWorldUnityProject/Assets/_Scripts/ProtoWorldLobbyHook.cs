@@ -19,7 +19,7 @@ public class ProtoWorldLobbyHook : LobbyHook
 
         print("Player Index : " + lobby.IndexPlayer);
 
-        ProtoWroldNetGM.instance._listPlayer.Add(player);
+        ProtoWorldNetGM.instance._listPlayer.Add(player);
     }
 
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ProtoWroldNetGM : NetworkBehaviour {
+public class ProtoWorldNetGM : NetworkBehaviour {
 
     public enum GamePhase
     {
@@ -19,7 +19,7 @@ public class ProtoWroldNetGM : NetworkBehaviour {
     [SyncVar]
     public int _CurrentGamePhase = 2;
 
-    public static ProtoWroldNetGM instance;
+    public static ProtoWorldNetGM instance;
 
     public List<ProtoWorldPlayer> _listPlayer;
 
