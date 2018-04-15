@@ -42,6 +42,9 @@ public class ProtoWorldPlayer : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!isLocalPlayer)
+            return;
+
         if(isReadyCreateUI && !isLocalPlayer && !isFirstSetingUI) {
             isFirstSetingUI = true;
             _mainUI.SetActive(false);
