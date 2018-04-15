@@ -15,7 +15,7 @@ namespace RTS_Cam
         {
             tabs = new TabsBlock(new Dictionary<string, System.Action>() 
             {
-                {"Movement", MovementTab},
+                {"Movements", MovementTab},
                 {"Rotation", RotationTab},
                 {"Height", HeightTab}
             });

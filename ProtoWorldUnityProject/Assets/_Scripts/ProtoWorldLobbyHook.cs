@@ -14,9 +14,12 @@ public class ProtoWorldLobbyHook : LobbyHook
         ProtoWorldPlayer player = gamePlayer.GetComponent<ProtoWorldPlayer>();
 
         player.IndexPlayer = lobby.IndexPlayer;
+        //player.RpcUpdateCurrentGamePhase(ProtoWroldNetGM.instance._CurrentGamePhase);
         //player.BuildClick();
 
         print("Player Index : " + lobby.IndexPlayer);
+
+        ProtoWroldNetGM.instance._listPlayer.Add(player);
     }
 
 }
