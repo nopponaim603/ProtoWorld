@@ -57,6 +57,32 @@ public class ProtoWorldGamePhasePanel : MonoBehaviour {
 
         return result;
     }
+
+    public void ShowVote()
+    {
+        string TempMessage = "";
+
+        TempMessage += "Quiz 1 ";
+        for (int x = 0; x < ProtoWorldNetGM.instance._SumVoteQuiz1.Length; x++)
+        {
+            TempMessage += "\nVote Choice " + x + " = " + ProtoWorldNetGM.instance._SumVoteQuiz1[x];
+        }
+
+        TempMessage += "\nQuiz 2 ";
+        for (int x = 0; x < ProtoWorldNetGM.instance._SumVoteQuiz2.Length; x++)
+        {
+            TempMessage += "\nVote Choice " + x + " = " + ProtoWorldNetGM.instance._SumVoteQuiz2[x];
+        }
+
+        TempMessage += "\nQuiz 3 ";
+        for (int x = 0; x < ProtoWorldNetGM.instance._SumVoteQuiz3.Length; x++)
+        {
+            TempMessage += "\nVote Choice " + x + " = " + ProtoWorldNetGM.instance._SumVoteQuiz3[x];
+        }
+
+        MasterPlanningPanel.GetComponentInChildren<Text>().text = TempMessage;
+    }
+
     // Use this for initialization
     void Start () {
 		

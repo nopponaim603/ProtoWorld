@@ -58,7 +58,7 @@ public class ProtoWorldPlayer : NetworkBehaviour {
     [Command]
     void CmdBuildClick(GameObject self, int IndexPlayer)
     {
-        if (IndexPlayer != 3)
+        if (IndexPlayer < 10)
         {
 
             //print("Name : " + _parentUI.name + " : activeSelf = " + _parentUI.activeSelf);
@@ -117,6 +117,9 @@ public class ProtoWorldPlayer : NetworkBehaviour {
         print("Server Print...");
 
         print("Quiz1 : " + _q1 + " : Quiz2 : " + _q2 + " : Quiz3 : " + _q3);
+        _Quiz1 = _q1;
+        _Quiz2 = _q2;
+        _Quiz3 = _q3;
         /*
         for(int i = 0; i < _resultlist.Count; i++)
         {

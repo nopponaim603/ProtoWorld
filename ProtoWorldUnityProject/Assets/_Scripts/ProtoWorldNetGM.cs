@@ -109,6 +109,10 @@ public class ProtoWorldNetGM : NetworkBehaviour {
 
         if (Input.GetKeyDown(KeyCode.U))
         {
+            ClearSumVote(_SumVoteQuiz1);
+            ClearSumVote(_SumVoteQuiz2);
+            ClearSumVote(_SumVoteQuiz3);
+
             for (int i = 0; i < _listPlayer.Count; i++)
             {
                 print(_listPlayer[i].name + " : Vote Quiz 1 = " + _listPlayer[i]._Quiz1);
@@ -119,6 +123,16 @@ public class ProtoWorldNetGM : NetworkBehaviour {
                 _SumVoteQuiz2[_listPlayer[i]._Quiz2]++;
                 _SumVoteQuiz3[_listPlayer[i]._Quiz3]++;
             }
+
+            _GamePhasePanel.ShowVote();
+        }
+    }
+
+    void ClearSumVote(int[] _sumVote)
+    {
+        for (int x = 0; x < _sumVote.Length; x++)
+        {
+            _sumVote[x] = 0;
         }
     }
 
