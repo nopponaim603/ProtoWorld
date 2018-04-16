@@ -39,6 +39,24 @@ public class ProtoWorldGamePhasePanel : MonoBehaviour {
 
         HeaderPanel.text = ((ProtoWorldNetGM.GamePhase)_currentGamePhase).ToString();
     }
+
+    public List<int> GetToggleGroups()
+    {
+        List<int> result = new List<int>();
+        ToggleGroup[] _listToggleGroup = MasterPlanningPanel.GetComponentsInChildren<ToggleGroup>();
+        foreach(ToggleGroup tempToggleGroup in _listToggleGroup)
+        {
+            IEnumerable<Toggle> _listActiveToggles = tempToggleGroup.ActiveToggles();
+            foreach (Toggle tempToggle in _listActiveToggles)
+            {
+                print("Group : " + tempToggleGroup.name + " | Name Active : " + tempToggle.name + " : " + tempToggle.transform.GetSiblingIndex());
+
+                result.Add(tempToggle.transform.GetSiblingIndex() - 1);
+            }
+        }
+
+        return result;
+    }
     // Use this for initialization
     void Start () {
 		

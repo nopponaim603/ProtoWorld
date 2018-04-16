@@ -32,6 +32,11 @@ public class ProtoWorldNetGM : NetworkBehaviour {
     public Transform _parentPanel;
     public GameObject _prefabText;
     public List<Text> _listState;
+
+    public int[] _SumVoteQuiz1 = { 0,0,0,0,0,0,0,0,0};
+    public int[] _SumVoteQuiz2 = { 0, 0, 0 };
+    public int[] _SumVoteQuiz3 = { 0, 0, 0 };
+
     private void Awake()
     {
         instance = this;
@@ -101,8 +106,20 @@ public class ProtoWorldNetGM : NetworkBehaviour {
                 }
             }
         }
-        
-        
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            for (int i = 0; i < _listPlayer.Count; i++)
+            {
+                print(_listPlayer[i].name + " : Vote Quiz 1 = " + _listPlayer[i]._Quiz1);
+                print(_listPlayer[i].name + " : Vote Quiz 2 = " + _listPlayer[i]._Quiz2);
+                print(_listPlayer[i].name + " : Vote Quiz 3 = " + _listPlayer[i]._Quiz3);
+
+                _SumVoteQuiz1[_listPlayer[i]._Quiz1]++;
+                _SumVoteQuiz2[_listPlayer[i]._Quiz2]++;
+                _SumVoteQuiz3[_listPlayer[i]._Quiz3]++;
+            }
+        }
     }
 
     public override void OnNetworkDestroy()
